@@ -30,6 +30,15 @@ Desenvolver uma ferramenta acessível, organizada e intuitiva que ajude professo
 
 ## Tecnologias utilizadas
 
+### Aplicativo Android
+
+- Kotlin
+- Android Studio
+- Gradle
+- XML ou Jetpack Compose — a confirmar
+
+### Protótipo para navegador
+
 - HTML
 - CSS
 - JavaScript
