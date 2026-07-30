@@ -1,0 +1,3403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#F5E6D3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>BRIO — Sistema Cognitivo PKM</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════
+   BRIO · Design System
+════════════════════════════════ */
+:root{
+  --bg:#FAFAF7; --paper:#F5E6D3; --paper2:#EDE0CF; --paper3:#E5D5BD;
+  --green:#A8C3A0; --green2:#7FA878; --green3:#5C8A55;
+  --blue:#7A8FA3; --blue2:#5F7A91; --blue3:#3D5F7A;
+  --ink:#2C2C2C; --ink2:#4A4A44; --ink3:#888880; --ink4:#B8B4AC;
+  --bdr:#C8B89A; --bdr2:#A89878;
+  --red:#C97B6A; --red2:#A85A48;
+  --yellow:#D4A84B; --yellow2:#B08830;
+  --purple:#9580B8; --purple2:#7560A0;
+  --r:5px; --r2:10px;
+  --sh:2px 2px 0 rgba(0,0,0,.10);
+  --sh2:3px 3px 0 rgba(0,0,0,.14);
+  --sh3:4px 4px 0 rgba(0,0,0,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:400;min-height:100%;line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4,.serif{font-family:'Special Elite',serif}
+.mono{font-family:'Courier Prime',monospace}
+img{max-width:100%}
+button{font-family:'DM Sans',sans-serif;cursor:pointer}
+input,textarea,select{font-family:'DM Sans',sans-serif}
+a{color:var(--blue2);text-decoration:none}
+
+/* ── SHELL ── */
+#app{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;background:var(--bg)}
+
+/* ── TOPBAR ── */
+#topbar{
+  position:sticky;top:0;z-index:50;
+  background:var(--paper);
+  border-bottom:2.5px solid var(--bdr);
+  padding:.5rem 1rem;
+  display:flex;align-items:center;gap:.5rem;
+  box-shadow:var(--sh);
+}
+.tbar-logo{font-family:'Special Elite',serif;font-size:1.5rem;color:var(--ink);letter-spacing:.06em;flex:1}
+.tbar-logo em{font-style:normal;color:var(--blue2)}
+.tbar-date{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--ink3);white-space:nowrap}
+
+/* ── BOTTOM NAV ── */
+#bottomnav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;z-index:50;
+  background:var(--paper);border-top:2.5px solid var(--bdr);
+  display:flex;box-shadow:0 -1px 8px rgba(0,0,0,.08);
+}
+.nav-btn{
+  flex:1;padding:.5rem .1rem .4rem;display:flex;flex-direction:column;
+  align-items:center;gap:.12rem;cursor:pointer;
+  background:none;border:none;
+  font-family:'Courier Prime',monospace;font-size:.56rem;letter-spacing:.03em;
+  color:var(--ink3);transition:.15s;border-right:1px solid var(--bdr);
+}
+.nav-btn:last-child{border-right:none}
+.nav-btn .ni{font-size:1.15rem;line-height:1}
+.nav-btn.on{color:var(--blue2);background:rgba(95,122,145,.07)}
+
+/* ── PAGES ── */
+#main{flex:1;overflow-y:auto;padding-bottom:72px;overscroll-behavior:contain}
+.pg{display:none;padding:1rem;animation:pgIn .2s ease both}
+.pg.on{display:block}
+@keyframes pgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── WINDOW CHROME ── */
+.win{background:var(--paper);border:2.5px solid var(--bdr);border-radius:var(--r);overflow:hidden;margin-bottom:.85rem;box-shadow:var(--sh)}
+.wbar{
+  background:var(--paper2);border-bottom:2px solid var(--bdr);
+  padding:.4rem .85rem;display:flex;align-items:center;gap:.35rem;
+}
+.wd{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--bdr2);flex-shrink:0}
+.wd.r{background:var(--red)}.wd.y{background:var(--yellow)}.wd.g{background:var(--green)}
+.wtitle{font-family:'Courier Prime',monospace;font-size:.76rem;font-weight:700;color:var(--ink2);flex:1;margin-left:.25rem}
+.wbody{padding:1rem}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
+  padding:.42rem .9rem;border-radius:var(--r);
+  font-family:'Courier Prime',monospace;font-size:.78rem;font-weight:700;
+  border:2px solid var(--ink);background:var(--paper);color:var(--ink);
+  cursor:pointer;box-shadow:var(--sh);transition:.12s;
+  user-select:none;white-space:nowrap;
+}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:var(--sh2)}
+.btn:active{transform:translate(1px,1px);box-shadow:none}
+.btn:disabled{opacity:.45;cursor:default;transform:none!important;box-shadow:var(--sh)!important}
+.btn-g{background:var(--green);border-color:var(--green2);color:var(--ink2)}
+.btn-b{background:var(--blue);border-color:var(--blue2);color:#fff}
+.btn-r{background:var(--red);border-color:var(--red2);color:#fff}
+.btn-y{background:var(--yellow);border-color:var(--yellow2);color:var(--ink2)}
+.btn-p{background:var(--purple);border-color:var(--purple2);color:#fff}
+.btn-sm{padding:.25rem .65rem;font-size:.7rem}
+.btn-xs{padding:.18rem .45rem;font-size:.64rem}
+.btn-full{width:100%}
+.btn-lg{padding:.6rem 1.4rem;font-size:.88rem}
+
+/* ── INPUTS ── */
+.inp,.ta{
+  width:100%;background:var(--bg);
+  border:2px solid var(--bdr);border-radius:var(--r);
+  padding:.55rem .85rem;color:var(--ink);
+  font-size:.88rem;outline:none;transition:.15s;
+}
+.inp:focus,.ta:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(95,122,145,.12)}
+.ta{resize:vertical;min-height:78px;line-height:1.65}
+.label{
+  font-family:'Courier Prime',monospace;font-size:.68rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);
+  display:block;margin-bottom:.3rem;
+}
+.field{margin-bottom:.75rem}
+select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888880'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;padding-right:2.2rem;appearance:none}
+
+/* ── TAGS ── */
+.tag{display:inline-flex;align-items:center;gap:.25rem;padding:.15rem .55rem;border-radius:2px;font-family:'Courier Prime',monospace;font-size:.64rem;font-weight:700;border:1.5px solid var(--bdr2);background:var(--paper);color:var(--ink3)}
+.tag-g{background:rgba(168,195,160,.28);border-color:var(--green2);color:var(--green3)}
+.tag-b{background:rgba(122,143,163,.18);border-color:var(--blue2);color:var(--blue3)}
+.tag-r{background:rgba(201,123,106,.15);border-color:var(--red);color:var(--red2)}
+.tag-y{background:rgba(212,168,75,.18);border-color:var(--yellow);color:var(--yellow2)}
+.tag-p{background:rgba(149,128,184,.15);border-color:var(--purple);color:var(--purple2)}
+
+/* ── ALERTS / CALLOUTS ── */
+.alert{padding:.75rem 1rem;border-radius:var(--r);margin-bottom:.75rem;font-size:.85rem;line-height:1.65;border-left:4px solid}
+.alert-g{background:rgba(168,195,160,.15);border-color:var(--green2);color:var(--ink2)}
+.alert-b{background:rgba(122,143,163,.12);border-color:var(--blue2);color:var(--ink2)}
+.alert-r{background:rgba(201,123,106,.12);border-color:var(--red);color:var(--ink2)}
+.alert-y{background:rgba(212,168,75,.12);border-color:var(--yellow);color:var(--ink2)}
+.alert-p{background:rgba(149,128,184,.12);border-color:var(--purple);color:var(--ink2)}
+
+/* ── DASH ── */
+.dash-hero{background:var(--paper);border:2.5px solid var(--bdr);border-radius:var(--r);padding:1.25rem;margin-bottom:.85rem;box-shadow:var(--sh);position:relative;overflow:hidden}
+.dash-hero::after{content:'PKM';position:absolute;right:-0.5rem;bottom:-1.5rem;font-family:'Special Elite',serif;font-size:5.5rem;color:rgba(122,143,163,.07);pointer-events:none;line-height:1}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.85rem}
+.stat-card{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);padding:.75rem .5rem;text-align:center;box-shadow:var(--sh)}
+.stat-n{font-family:'Special Elite',serif;font-size:1.65rem;color:var(--blue2);line-height:1}
+.stat-l{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--ink3);margin-top:.15rem;text-transform:uppercase;letter-spacing:.06em}
+.streak-wrap{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);padding:.8rem;margin-bottom:.85rem}
+.streak-dots{display:flex;gap:.3rem;margin-top:.4rem}
+.sdot{flex:1;height:8px;border-radius:2px;border:1.5px solid var(--bdr);background:var(--bg);transition:.2s}
+.sdot.done{background:var(--green);border-color:var(--green2)}
+.sdot.today{background:var(--blue);border-color:var(--blue2)}
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.85rem}
+.qa{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);padding:.9rem;box-shadow:var(--sh);cursor:pointer;transition:.12s}
+.qa:hover{transform:translate(-1px,-1px);box-shadow:var(--sh2);border-color:var(--bdr2)}
+.qa:active{transform:translate(1px,1px);box-shadow:none}
+.qa-i{font-size:1.4rem;margin-bottom:.3rem;line-height:1}
+.qa-t{font-family:'Courier Prime',monospace;font-size:.78rem;font-weight:700;margin-bottom:.1rem}
+.qa-s{font-size:.72rem;color:var(--ink3);line-height:1.4}
+
+/* ── PARA ── */
+.folder{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);margin-bottom:.75rem;overflow:hidden;box-shadow:var(--sh)}
+.folder-head{padding:.7rem .95rem;display:flex;align-items:center;gap:.6rem;cursor:pointer;transition:.12s}
+.folder-head:hover{background:var(--paper2)}
+.folder-body{display:none;padding:.5rem;border-top:1.5px dashed var(--bdr)}
+.folder-body.open{display:block;animation:pgIn .15s ease both}
+.fh-icon{font-size:1.05rem;flex-shrink:0}
+.fh-label{font-family:'Courier Prime',monospace;font-size:.82rem;font-weight:700;flex:1}
+.fh-count{font-family:'Courier Prime',monospace;font-size:.68rem;color:var(--ink3)}
+.fh-arrow{font-size:.65rem;color:var(--ink3);transition:transform .2s;flex-shrink:0}
+.fh-arrow.open{transform:rotate(90deg)}
+.p-item{display:flex;align-items:flex-start;gap:.55rem;padding:.55rem .7rem;background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);margin-bottom:.35rem;cursor:default;transition:.12s}
+.p-item:hover{border-color:var(--bdr2);background:rgba(245,230,211,.5)}
+.p-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:.38rem;border:2px solid}
+.p-txt{flex:1;min-width:0}
+.p-title{font-size:.84rem;font-weight:500;line-height:1.35}
+.p-sub{font-size:.71rem;color:var(--ink3);margin-top:.08rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-del{background:none;border:none;color:transparent;padding:.1rem .2rem;border-radius:3px;font-size:.85rem;flex-shrink:0;transition:.12s;cursor:pointer}
+.p-item:hover .p-del{color:var(--ink4)}
+.p-del:hover{color:var(--red)!important}
+.empty-msg{text-align:center;padding:1.25rem;font-family:'Courier Prime',monospace;font-size:.78rem;color:var(--ink4);border:1.5px dashed var(--bdr);border-radius:var(--r);background:var(--bg)}
+
+/* ── NOTES ── */
+.note-card{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);margin-bottom:.6rem;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:.12s}
+.note-card:hover{transform:translate(-1px,-1px);box-shadow:var(--sh2);border-color:var(--bdr2)}
+.note-head{padding:.65rem .9rem;display:flex;align-items:flex-start;gap:.5rem}
+.note-title{font-family:'Courier Prime',monospace;font-size:.85rem;font-weight:700;flex:1;line-height:1.3}
+.note-meta{font-size:.68rem;color:var(--ink3);margin-top:.1rem}
+.note-preview{padding:0 .9rem .65rem;font-size:.8rem;color:var(--ink2);line-height:1.55;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.note-tags{padding:0 .9rem .65rem;display:flex;gap:.25rem;flex-wrap:wrap}
+
+/* NOTE FIELD ACCORDION */
+.nfield{background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);margin-bottom:.45rem;overflow:hidden}
+.nf-head{padding:.42rem .75rem;background:var(--paper);border-bottom:1.5px solid transparent;display:flex;align-items:center;gap:.45rem;cursor:pointer;transition:.12s}
+.nf-head.open{border-bottom-color:var(--bdr)}
+.nf-head:hover{background:var(--paper2)}
+.nf-icon{font-size:.9rem;flex-shrink:0}
+.nf-label{font-family:'Courier Prime',monospace;font-size:.7rem;font-weight:700;color:var(--ink2);flex:1}
+.nf-hint{font-size:.64rem;color:var(--ink3);font-style:italic}
+.nf-body{display:none;padding:.55rem .75rem}
+.nf-body.open{display:block}
+.conn-pill{display:inline-flex;align-items:center;gap:.3rem;background:var(--paper);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.15rem .5rem;font-size:.71rem;font-family:'Courier Prime',monospace;cursor:pointer;margin:.15rem}
+.conn-pill:hover{border-color:var(--red)}
+
+/* ── FLASHCARDS ── */
+.fc-stage{perspective:1000px;margin-bottom:.85rem}
+.fc-card{
+  background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);
+  min-height:200px;display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;text-align:center;box-shadow:var(--sh2);cursor:pointer;
+  position:relative;transition:transform .4s;transform-style:preserve-3d;
+}
+.fc-card.flipped{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;backface-visibility:hidden;border-radius:3px}
+.fc-back{background:linear-gradient(135deg,rgba(168,195,160,.25),rgba(122,143,163,.15));transform:rotateY(180deg);border-radius:var(--r)}
+.fc-side-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--ink4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem}
+.fc-text{font-family:'Special Elite',serif;font-size:1.05rem;line-height:1.55;color:var(--ink)}
+.fc-hint{font-size:.7rem;color:var(--ink4);margin-top:.9rem;font-family:'Courier Prime',monospace}
+.rate-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.85rem}
+.rate-btn{padding:.55rem;border:2px solid var(--bdr);border-radius:var(--r);background:var(--bg);cursor:pointer;font-family:'Courier Prime',monospace;font-size:.72rem;text-align:center;transition:.12s;box-shadow:var(--sh)}
+.rate-btn:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.rate-btn.hard{background:rgba(201,123,106,.15);border-color:var(--red)}
+.rate-btn.ok{background:rgba(212,168,75,.15);border-color:var(--yellow)}
+.rate-btn.easy{background:rgba(168,195,160,.25);border-color:var(--green2)}
+.fc-mini{background:var(--paper);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.5rem .75rem;margin-bottom:.35rem;display:flex;align-items:center;gap:.5rem}
+.fc-mini-q{font-size:.82rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── GRAFO ── */
+#grafo-canvas{
+  width:100%;height:310px;
+  background:var(--bg) repeating-linear-gradient(0deg,var(--bdr)4 0px,transparent 1px,transparent 22px) repeating-linear-gradient(90deg,var(--bdr)4 0px,transparent 1px,transparent 22px);
+  border:2px solid var(--bdr);border-radius:var(--r);
+  position:relative;overflow:hidden;touch-action:none;margin-bottom:.75rem;
+}
+.gnode{
+  position:absolute;transform:translate(-50%,-50%);
+  background:var(--paper);border:2px solid var(--bdr2);border-radius:var(--r);
+  padding:.32rem .65rem;font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;
+  cursor:grab;user-select:none;white-space:nowrap;box-shadow:var(--sh);
+  transition:border-color .15s,box-shadow .15s;
+}
+.gnode:hover{border-color:var(--blue2);z-index:2}
+.gnode.sel{border-color:var(--green2);background:rgba(168,195,160,.2);z-index:3}
+.gnode.hub{border-color:var(--blue2);background:rgba(122,143,163,.15)}
+.gsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.grafo-tools{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.75rem}
+
+/* ── POMODORO ── */
+.pomo-wrap{display:flex;flex-direction:column;align-items:center;padding:1rem 0}
+.pomo-ring{
+  width:180px;height:180px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;margin-bottom:.75rem;
+}
+.pomo-ring svg{position:absolute;inset:-8px;width:calc(100%+16px);height:calc(100%+16px);transform:rotate(-90deg)}
+.pomo-ring circle{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .9s linear}
+.pomo-inner{text-align:center;position:relative;z-index:1}
+.pomo-time{font-family:'Special Elite',serif;font-size:2.4rem;color:var(--ink);line-height:1}
+.pomo-phase{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--ink3);letter-spacing:.15em;text-transform:uppercase;margin-top:.2rem}
+.pomo-task{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);padding:.75rem;margin-bottom:.75rem}
+.pomo-btns{display:flex;gap:.6rem;justify-content:center;margin-bottom:.75rem}
+
+/* ── FEED ── */
+.feed-card{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);margin-bottom:.85rem;overflow:hidden;box-shadow:var(--sh)}
+.feed-head{padding:.7rem .95rem .45rem;display:flex;align-items:center;gap:.55rem;border-bottom:1.5px dashed var(--bdr)}
+.fav{width:30px;height:30px;border-radius:50%;background:var(--green);border:2px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;overflow:hidden}
+.fav img{width:100%;height:100%;object-fit:cover}
+.feed-author{font-family:'Courier Prime',monospace;font-size:.79rem;font-weight:700}
+.feed-time{font-size:.65rem;color:var(--ink3)}
+.feed-body{padding:.7rem .95rem .5rem;font-size:.87rem;line-height:1.68;color:var(--ink2)}
+.feed-q{background:rgba(122,143,163,.1);border:1.5px solid var(--blue);border-radius:var(--r);padding:.5rem .8rem;margin:.4rem .95rem;font-family:'Courier Prime',monospace;font-size:.78rem;color:var(--ink)}
+.feed-actions{display:flex;gap:.35rem;padding:.45rem .85rem .8rem;border-top:1px dashed var(--bdr);margin-top:.3rem;flex-wrap:wrap}
+.react-btn{background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);padding:.28rem .6rem;font-family:'Courier Prime',monospace;font-size:.68rem;cursor:pointer;transition:.12s}
+.react-btn:hover{border-color:var(--ink);background:var(--paper)}
+.react-btn.on{background:rgba(168,195,160,.25);border-color:var(--green2)}
+.feed-integrations{display:flex;gap:.35rem;padding:.3rem .85rem .75rem;flex-wrap:wrap}
+
+/* ── BIAS ANALYZER ── */
+.bias-meter-row{display:flex;align-items:center;gap:1rem;margin:1rem 0}
+.bias-score{font-family:'Special Elite',serif;font-size:3rem;min-width:4.5rem;text-align:center;line-height:1}
+.bias-bar-bg{flex:1;height:12px;background:var(--bg);border:2px solid var(--bdr);border-radius:3px;overflow:hidden}
+.bias-bar{height:100%;border-radius:2px;transition:width .9s ease}
+.bias-card{background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.65rem .85rem;margin-bottom:.4rem}
+.bias-name{font-family:'Courier Prime',monospace;font-size:.72rem;font-weight:700;margin-bottom:.2rem}
+.bias-desc{font-size:.8rem;color:var(--ink2);line-height:1.55}
+.bias-quote{font-size:.75rem;color:var(--ink3);font-style:italic;margin:.2rem 0;border-left:2.5px solid var(--bdr2);padding-left:.5rem}
+.bias-tip{font-size:.75rem;color:var(--green3);margin-top:.3rem}
+.highlight{background:rgba(212,168,75,.28);border-radius:2px;padding:.05em .15em}
+
+/* ── MODAL ── */
+.overlay{
+  position:fixed;inset:0;background:rgba(44,44,44,.6);z-index:80;
+  display:flex;align-items:flex-end;
+  backdrop-filter:blur(3px);
+}
+.overlay.hidden{display:none}
+.modal{
+  background:var(--bg);border:2.5px solid var(--bdr);
+  border-radius:var(--r2) var(--r2) 0 0;
+  width:100%;max-width:430px;margin:0 auto;
+  max-height:88vh;overflow-y:auto;
+  box-shadow:0 -6px 24px rgba(0,0,0,.18);
+}
+.modal-drag{width:38px;height:4px;background:var(--bdr2);border-radius:2px;margin:.65rem auto .1rem}
+.modal-hdr{padding:.65rem 1rem;border-bottom:2px solid var(--bdr);display:flex;align-items:center;gap:.6rem;background:var(--paper);position:sticky;top:0;z-index:2}
+.modal-title{font-family:'Courier Prime',monospace;font-size:.88rem;font-weight:700;flex:1}
+.modal-close{background:none;border:none;font-size:1.15rem;cursor:pointer;color:var(--ink3);padding:.1rem .3rem;border-radius:3px;transition:.12s}
+.modal-close:hover{color:var(--red);background:rgba(201,123,106,.12)}
+.modal-body{padding:1rem}
+.modal-foot{padding:.65rem 1rem;border-top:2px solid var(--bdr);display:flex;gap:.5rem;justify-content:flex-end;background:var(--paper)}
+
+/* ── PROFILE ── */
+.pav-ring{width:76px;height:76px;border-radius:50%;background:var(--green);border:3px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto .75rem;overflow:hidden;cursor:pointer;box-shadow:var(--sh)}
+.pav-ring img{width:100%;height:100%;object-fit:cover;display:none}
+.xp-bar-bg{height:8px;background:var(--bg);border:1.5px solid var(--bdr);border-radius:3px;overflow:hidden;margin:.35rem 0}
+.xp-bar-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .6s ease}
+.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem}
+.skill-card{background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.5rem .65rem}
+.skill-name{font-family:'Courier Prime',monospace;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.skill-bar-bg{height:5px;background:var(--paper2);border-radius:2px;overflow:hidden}
+.skill-bar{height:100%;border-radius:2px;transition:width .6s ease}
+.skill-pct{font-size:.62rem;color:var(--ink3);margin-top:.1rem;font-family:'Courier Prime',monospace}
+.setting-row{display:flex;align-items:center;gap:.75rem;padding:.75rem .9rem;background:var(--paper);border:1.5px solid var(--bdr);border-radius:var(--r);margin-bottom:.45rem}
+.setting-icon{font-size:1rem;flex-shrink:0}
+.setting-label{flex:1;font-size:.85rem}
+.toggle-sw{width:42px;height:23px;background:var(--bdr);border-radius:12px;border:2px solid var(--bdr2);position:relative;cursor:pointer;flex-shrink:0;transition:.2s}
+.toggle-sw.on{background:var(--green2);border-color:var(--green3)}
+.toggle-sw::after{content:'';position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;border:1.5px solid rgba(0,0,0,.1);transition:.2s}
+.toggle-sw.on::after{left:calc(100% - 17px - 2px)}
+
+/* ── ONBOARDING ── */
+#ob-screen{
+  position:fixed;inset:0;z-index:100;background:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2rem;text-align:center;
+}
+#ob-screen.hidden{display:none}
+.ob-step{display:none;animation:pgIn .3s ease both}
+.ob-step.on{display:flex;flex-direction:column;align-items:center}
+.ob-emoji{font-size:4rem;margin-bottom:1rem;line-height:1}
+.ob-title{font-family:'Special Elite',serif;font-size:2rem;margin-bottom:.5rem}
+.ob-body{font-size:.92rem;color:var(--ink2);line-height:1.7;max-width:300px;margin-bottom:1.5rem}
+.ob-dots{display:flex;gap:.5rem;justify-content:center;margin-top:1.5rem}
+.ob-dot{width:8px;height:8px;border-radius:50%;background:var(--bdr2);border:1.5px solid var(--bdr2);transition:.15s}
+.ob-dot.on{background:var(--blue2);border-color:var(--blue2)}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;top:66px;left:50%;transform:translateX(-50%) translateY(-12px);
+  background:var(--ink);color:var(--paper);
+  padding:.5rem 1.15rem;border-radius:var(--r);
+  font-family:'Courier Prime',monospace;font-size:.76rem;
+  z-index:200;opacity:0;transition:.28s;pointer-events:none;
+  white-space:nowrap;box-shadow:var(--sh3);max-width:90%;text-align:center;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── MISC ── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem}
+.sec-label{font-family:'Courier Prime',monospace;font-size:.66rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:.5rem}
+.sec-label::after{content:'';flex:1;height:1.5px;background:var(--bdr)}
+.divider{border:none;border-top:1.5px dashed var(--bdr);margin:.75rem 0}
+input[type=file]{display:none}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
+
+/* ── LOADING PULSE ── */
+.pulse{display:flex;align-items:center;gap:.5rem;padding:.65rem .9rem;background:rgba(149,128,184,.1);border:1.5px solid var(--purple);border-radius:var(--r);font-family:'Courier Prime',monospace;font-size:.78rem;color:var(--purple)}
+.pdot{width:7px;height:7px;border-radius:50%;background:var(--purple);animation:pb 1.1s infinite}
+.pdot:nth-child(2){animation-delay:.18s}
+.pdot:nth-child(3){animation-delay:.36s}
+@keyframes pb{0%,80%,100%{transform:scale(.7);opacity:.6}40%{transform:scale(1);opacity:1}}
+.ai-result{background:var(--bg);border:1.5px solid var(--purple);border-radius:var(--r);padding:.85rem;margin-top:.6rem;font-size:.86rem;line-height:1.7;color:var(--ink2);white-space:pre-wrap}
+.ai-badge{font-family:'Courier Prime',monospace;font-size:.62rem;background:rgba(149,128,184,.12);border:1px solid var(--purple);color:var(--purple2);padding:.14rem .48rem;border-radius:3px;display:inline-flex;align-items:center;gap:.25rem}
+
+/* ── BRIO PATCH: Peirce, relógio, feed expandido e modo escuro ── */
+body.dark{--bg:#17171b;--paper:#24232a;--paper2:#302e38;--paper3:#3b3842;--ink:#F2EEE8;--ink2:#DED6CC;--ink3:#B3A99E;--ink4:#7E766E;--bdr:#59515f;--bdr2:#7D7288;--green:#5f8067;--green2:#7BAA83;--green3:#A4D1AA;--blue:#536B82;--blue2:#8BA8C3;--blue3:#BFD4E8;--red:#A96057;--red2:#D98A7C;--yellow:#B99345;--yellow2:#E0BE66;--purple:#7865A0;--purple2:#B29CE0}.clock-pill{font-family:'Courier Prime',monospace;font-size:.68rem;color:var(--ink2);background:rgba(122,143,163,.12);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.12rem .4rem;white-space:nowrap}.peirce-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;margin-bottom:.65rem}.peirce-tab.on{background:var(--purple);border-color:var(--purple2);color:#fff}.peirce-card{background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.75rem;line-height:1.6}.peirce-diagram{min-height:105px;background:var(--paper);border:2px dashed var(--bdr);border-radius:var(--r);display:flex;align-items:center;justify-content:center;margin:.6rem 0;position:relative;overflow:hidden}.cut{border:2px solid var(--ink2);border-radius:50%;padding:1rem 1.4rem;background:rgba(255,255,255,.08)}.cut.double{box-shadow:0 0 0 12px rgba(122,143,163,.16)}.identity-line{height:3px;width:70%;background:var(--blue2);position:absolute}.feed-media-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin:.5rem .95rem}.feed-media-grid img{width:100%;max-height:180px;object-fit:cover;border:1.5px solid var(--bdr);border-radius:var(--r)}.attachment-chip{display:inline-flex;align-items:center;gap:.3rem;border:1.5px solid var(--bdr);border-radius:var(--r);padding:.22rem .5rem;background:var(--bg);font-size:.72rem;margin:.15rem}.comment-box{border-top:1px dashed var(--bdr);padding:.55rem .85rem}.comment-row{font-size:.78rem;background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.35rem .55rem;margin:.25rem 0}.comment-form{display:flex;gap:.35rem;margin-top:.4rem}.feed-link{display:block;margin:.45rem .95rem;padding:.45rem .7rem;border:1.5px solid var(--blue2);border-radius:var(--r);background:rgba(122,143,163,.12);font-family:'Courier Prime',monospace;font-size:.76rem;word-break:break-all}.status-mini{font-family:'Courier Prime',monospace;font-size:.64rem;color:var(--ink3);margin-top:.15rem}
+
+/* ── BRIO PATCH ANDROID + ONLINE: rolagem estável sem bloquear cliques ──
+   #main é a área rolável real. Evita position:fixed no body, que em alguns
+   WebViews do Android atrapalha toque em botões e campos. */
+html,
+body{
+  width:100%;
+  height:100%;
+  min-height:100%;
+  overflow:hidden !important;
+}
+body{
+  overscroll-behavior-y:none;
+}
+#app{
+  width:100%;
+  height:100vh;
+  height:100dvh;
+  min-height:0 !important;
+  max-height:100vh;
+  max-height:100dvh;
+  overflow:hidden !important;
+  display:flex;
+  flex-direction:column;
+}
+#topbar{
+  flex:0 0 auto;
+  position:relative;
+  top:auto;
+}
+#main{
+  flex:1 1 auto;
+  min-height:0;
+  height:auto;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  overscroll-behavior-y:contain;
+  padding-bottom:calc(92px + env(safe-area-inset-bottom));
+  scroll-behavior:auto;
+}
+.pg{
+  min-height:calc(100vh - 140px);
+  min-height:calc(100dvh - 140px);
+}
+#bottomnav{
+  flex:0 0 auto;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+button,
+.nav-btn,
+.btn,
+.qa,
+.folder-head,
+.toggle-sw{
+  touch-action:manipulation;
+}
+.overlay{
+  touch-action:auto;
+}
+.modal{
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+}
+#grafo-canvas{
+  touch-action:none;
+}
+
+
+
+/* ── BRIO PATCH 2: acessibilidade, modo online no perfil e Peirce didático ── */
+body.font-large{font-size:18px}
+body.font-xlarge{font-size:20px}
+body.font-large .nav-btn{font-size:.62rem}
+body.font-xlarge .nav-btn{font-size:.66rem}
+body.font-large .tbar-date,body.font-large .clock-pill{font-size:.72rem}
+body.font-xlarge .tbar-date,body.font-xlarge .clock-pill{font-size:.78rem}
+.a11y-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;margin-top:.35rem}
+.a11y-btn{padding:.35rem .25rem;font-size:.68rem}
+.online-card{background:var(--paper);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.75rem .9rem;margin-bottom:.55rem}
+.online-actions{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.55rem}
+.gnode.alfa{border-style:dashed;border-color:var(--red);background:rgba(201,123,106,.14)}
+.gnode.beta{border-color:var(--blue2);background:rgba(122,143,163,.16)}
+.gnode.gama{border-style:double;border-color:var(--purple2);background:rgba(149,128,184,.16)}
+.gnode .gkind{font-size:.65rem;margin-right:.25rem;opacity:.85}
+.grafo-help{background:var(--paper);border:1.5px dashed var(--bdr);border-radius:var(--r);padding:.65rem .8rem;margin:.55rem 0;font-size:.8rem;color:var(--ink2);line-height:1.55}
+.grafo-modebar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;margin:.55rem 0}
+.grafo-modebar .btn{font-size:.65rem;padding:.35rem .25rem;white-space:normal;line-height:1.25}
+
+
+
+/* ── BRIO PROFESSOR · painel docente conectado ao aluno ── */
+#bottomnav .nav-btn{font-size:.50rem}
+.teacher-hero{background:linear-gradient(135deg,rgba(122,143,163,.18),rgba(168,195,160,.20));border:2.5px solid var(--bdr);border-radius:var(--r);padding:1rem;margin-bottom:.85rem;box-shadow:var(--sh);position:relative;overflow:hidden}
+.teacher-hero::after{content:'DOCENTE';position:absolute;right:-.4rem;bottom:-1.2rem;font-family:'Special Elite',serif;font-size:3.8rem;color:rgba(122,143,163,.08);pointer-events:none;line-height:1}
+.teacher-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.8rem}
+.teacher-card{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);padding:.7rem;box-shadow:var(--sh)}
+.teacher-card-num{font-family:'Special Elite',serif;font-size:1.8rem;color:var(--blue2);line-height:1}
+.teacher-card-label{font-family:'Courier Prime',monospace;font-size:.62rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-top:.12rem}
+.prof-activity{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);padding:.75rem;margin-bottom:.6rem;box-shadow:var(--sh)}
+.prof-activity-title{font-family:'Courier Prime',monospace;font-size:.86rem;font-weight:700;margin-bottom:.18rem;color:var(--ink)}
+.prof-activity-meta{font-size:.68rem;color:var(--ink3);margin-bottom:.45rem}
+.prof-activity-body{font-size:.8rem;color:var(--ink2);line-height:1.55;margin:.35rem 0}
+.prof-actions{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.55rem}
+.prof-diagnostic{background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.6rem .75rem;margin-bottom:.45rem}
+.prof-diagnostic strong{font-family:'Courier Prime',monospace;font-size:.74rem}
+.prof-diagnostic p{font-size:.78rem;color:var(--ink2);line-height:1.55;margin-top:.18rem}
+.prof-response{background:var(--paper);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.6rem .7rem;margin-bottom:.45rem}
+.prof-response-head{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.25rem}
+.prof-status{font-family:'Courier Prime',monospace;font-size:.62rem;border:1.5px solid var(--bdr);border-radius:3px;padding:.1rem .35rem;background:var(--bg)}
+.prof-status.ok{border-color:var(--green2);color:var(--green3);background:rgba(168,195,160,.16)}
+.prof-status.mid{border-color:var(--yellow);color:var(--yellow2);background:rgba(212,168,75,.14)}
+.prof-status.bad{border-color:var(--red);color:var(--red2);background:rgba(201,123,106,.12)}
+.student-fields{display:flex;gap:.25rem;flex-wrap:wrap;margin:.35rem 0}
+.student-field-chip{font-family:'Courier Prime',monospace;font-size:.62rem;border:1.5px solid var(--blue);background:rgba(122,143,163,.10);color:var(--blue3);padding:.1rem .38rem;border-radius:3px}
+.check-list{display:grid;gap:.35rem;margin:.4rem 0}.check-line{display:flex;gap:.4rem;align-items:flex-start;font-size:.82rem;color:var(--ink2)}.check-line input{margin-top:.22rem}
+
+</style>
+</head>
+<body>
+
+<!-- ════════ ONBOARDING ════════ -->
+<div id="ob-screen">
+  <div class="ob-step on" id="ob0">
+    <div class="ob-emoji">🧠</div>
+    <h1 class="ob-title">BRIO</h1>
+    <p class="ob-body">Energia, vivacidade e força interna.<br>Seu sistema de gestão cognitiva pessoal — um <em>segundo cérebro</em> para estudar, pensar e aprender melhor.</p>
+    <button class="btn btn-b btn-lg" onclick="obNext()">Começar →</button>
+  </div>
+  <div class="ob-step" id="ob1">
+    <div class="ob-emoji">📁</div>
+    <h2 class="ob-title">Método PARA</h2>
+    <p class="ob-body">Organize tudo em <strong>Projetos</strong>, Áreas, Recursos e Arquivo. Sem confusão, sem perda de informação.</p>
+    <button class="btn btn-g btn-lg" onclick="obNext()">Próximo →</button>
+  </div>
+  <div class="ob-step" id="ob2">
+    <div class="ob-emoji">🔬</div>
+    <h2 class="ob-title">IA que analisa</h2>
+    <p class="ob-body">O BRIO detecta vieses em textos, verifica argumentos e sugere conexões entre ideias — tudo sem precisar de internet.</p>
+    <div class="field" style="width:100%;max-width:280px;margin-top:.5rem">
+      <label class="label">Seu nome</label>
+      <input class="inp" id="ob-name" placeholder="Como posso te chamar?" autocomplete="given-name">
+    </div>
+    <button class="btn btn-b btn-lg" onclick="obFinish()" style="margin-top:1rem">Entrar no BRIO →</button>
+  </div>
+  <div class="ob-dots">
+    <div class="ob-dot on"></div><div class="ob-dot"></div><div class="ob-dot"></div>
+  </div>
+</div>
+
+<!-- ════════ APP SHELL ════════ -->
+<div id="app">
+  <div id="topbar">
+    <div class="tbar-logo">B<em>R</em>IO</div>
+    <span class="tbar-date" id="tbar-date"></span><span class="clock-pill" id="tbar-clock">--:--:--</span>
+    <button class="btn btn-sm btn-g" onclick="openModal('modal-nota-rapida')" title="Nova nota rápida" style="padding:.28rem .6rem">✏️</button>
+  </div>
+
+  <div id="main">
+
+    <!-- ══ DASH ══ -->
+    <div class="pg on" id="pg-dash">
+      <div class="dash-hero">
+        <p class="mono" style="font-size:.68rem;color:var(--ink3);margin-bottom:.2rem" id="dash-daystr"></p>
+        <h2 id="dash-greeting" style="font-size:1.45rem;margin-bottom:.15rem">Olá!</h2>
+        <p style="font-size:.85rem;color:var(--ink2)" id="dash-sub">O que você vai aprender hoje?</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-n" id="s-notas">0</div><div class="stat-l">Notas</div></div>
+        <div class="stat-card"><div class="stat-n" id="s-cards">0</div><div class="stat-l">Cards</div></div>
+        <div class="stat-card"><div class="stat-n" id="s-xp">0</div><div class="stat-l">XP</div></div>
+      </div>
+      <div class="streak-wrap">
+        <div class="sec-label" style="margin-bottom:0">Sequência — últimos 7 dias</div>
+        <div class="streak-dots" id="streak-dots"></div>
+      </div>
+      <div class="sec-hdr"><div class="sec-label" style="flex:1">ações rápidas</div></div>
+      <div class="qa-grid">
+        <div class="qa" onclick="navTo('notas');openModal('modal-nota-nova')"><div class="qa-i">✍️</div><div class="qa-t">Nova Nota</div><div class="qa-s">Anote com reflexão profunda</div></div>
+        <div class="qa" onclick="navTo('cards');iniciarEstudo()"><div class="qa-i">🃏</div><div class="qa-t">Estudar Agora</div><div class="qa-s">Revisão espaçada inteligente</div></div>
+        <div class="qa" onclick="navTo('analise')"><div class="qa-i">🔬</div><div class="qa-t">Analisar Texto</div><div class="qa-s">Detectar vieses com IA</div></div>
+        <div class="qa" onclick="navTo('foco')"><div class="qa-i">🎯</div><div class="qa-t">Modo Foco</div><div class="qa-s">Pomodoro 25 minutos</div></div>
+      </div>
+      <div class="win">
+        <div class="wbar"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div><span class="wtitle">🕸 Grafo de Peirce — Alfa, Beta e Gama</span></div>
+        <div class="wbody">
+          <p style="font-size:.82rem;color:var(--ink2);margin-bottom:.6rem">Área didática para transformar ideias em desenhos lógicos: separar, conectar e testar possibilidades.</p>
+          <div class="peirce-tabs"><button class="btn btn-sm peirce-tab on" id="pt-alfa" onclick="showPeirce('alfa')">Alfa</button><button class="btn btn-sm peirce-tab" id="pt-beta" onclick="showPeirce('beta')">Beta</button><button class="btn btn-sm peirce-tab" id="pt-gama" onclick="showPeirce('gama')">Gama</button></div>
+          <div id="peirce-dashboard"></div>
+          <button class="btn btn-p btn-full" style="margin-top:.65rem" onclick="navTo('grafo')">Abrir mapa cognitivo completo →</button>
+        </div>
+      </div>
+      <div class="sec-hdr"><div class="sec-label" style="flex:1">para revisar hoje</div></div>
+      <div id="dash-revisoes"></div>
+    </div>
+
+    <!-- ══ PARA ══ -->
+    <div class="pg" id="pg-para">
+      <div class="sec-hdr">
+        <div class="sec-label" style="flex:1">sistema para</div>
+        <button class="btn btn-sm btn-g" onclick="abrirAddPKM()">+ Novo item</button>
+      </div>
+      <div id="para-lista"></div>
+    </div>
+
+    <!-- ══ NOTAS ══ -->
+    <div class="pg" id="pg-notas">
+      <div class="sec-hdr">
+        <div class="sec-label" style="flex:1">minhas notas</div>
+        <button class="btn btn-sm btn-g" onclick="openModal('modal-nota-nova')">+ Nova</button>
+      </div>
+      <div id="notas-lista"></div>
+    </div>
+
+    <!-- ══ FLASHCARDS ══ -->
+    <div class="pg" id="pg-cards">
+      <div class="sec-hdr">
+        <div class="sec-label" style="flex:1">flashcards</div>
+        <button class="btn btn-sm btn-g" onclick="openModal('modal-fc-novo')">+ Criar</button>
+      </div>
+      <div id="fc-estudo"></div>
+      <div class="sec-label" style="margin-top:.85rem;margin-bottom:.5rem">todos os cards</div>
+      <div id="fc-lista"></div>
+    </div>
+
+    <!-- ══ GRAFO ══ -->
+    <div class="pg" id="pg-grafo">
+      <div class="sec-label" style="margin-bottom:.6rem">mapa cognitivo · grafo de Peirce</div>
+      <div class="alert alert-b">Use <strong>Alfa</strong> para negar/separar ideias, <strong>Beta</strong> para ligar sujeitos e relações, e <strong>Gama</strong> para hipóteses, regras e possibilidades.</div>
+      <div id="grafo-canvas"></div>
+      <div class="grafo-help" id="grafo-ajuda">
+        <strong>Como usar:</strong> crie um nó para cada ideia. Depois marque como <strong>Alfa</strong> quando quiser negar/limitar uma ideia, <strong>Beta</strong> quando quiser ligar ideias, ou <strong>Gama</strong> quando for hipótese/regra do tipo “se... então...”.
+      </div>
+      <div class="grafo-tools">
+        <button class="btn btn-sm btn-g" onclick="addGrafoNode()">+ Nó</button>
+        <button class="btn btn-sm" id="btn-conectar" onclick="toggleGrafoMode('connect')">↔ Conectar</button>
+        <button class="btn btn-sm" id="btn-editar" onclick="editarGrafoNode()">✎ Editar</button>
+        <button class="btn btn-sm" id="btn-deletar" onclick="toggleGrafoMode('delete')">✕ Remover</button>
+        <button class="btn btn-sm" onclick="criarExemploPeirce()">✨ Exemplo</button>
+        <button class="btn btn-sm" onclick="clearGrafo()">⟳ Limpar</button>
+      </div>
+      <div class="grafo-modebar">
+        <button class="btn btn-xs" onclick="setGrafoKind('alfa')">Alfa<br>nega/limita</button>
+        <button class="btn btn-xs" onclick="setGrafoKind('beta')">Beta<br>conecta</button>
+        <button class="btn btn-xs" onclick="setGrafoKind('gama')">Gama<br>hipótese</button>
+      </div>
+      <div class="win">
+        <div class="wbar"><div class="wd g"></div><span class="wtitle">Relações mapeadas</span></div>
+        <div class="wbody" id="grafo-relacoes" style="font-family:'Courier Prime',monospace;font-size:.78rem;color:var(--ink2);line-height:1.8"></div>
+      </div>
+    </div>
+
+    <!-- ══ FOCO / POMODORO ══ -->
+    <div class="pg" id="pg-foco">
+      <div class="sec-label" style="margin-bottom:.75rem">modo foco</div>
+      <div class="pomo-task">
+        <label class="label">Tarefa desta sessão</label>
+        <input class="inp" id="pomo-tarefa" placeholder="O que você vai fazer nos próximos 25 min?">
+      </div>
+      <div class="pomo-wrap">
+        <div class="pomo-ring" id="pomo-ring">
+          <svg viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="86" stroke="var(--bdr)" stroke-width="8" fill="none"/>
+            <circle id="pomo-arco" cx="100" cy="100" r="86"
+              stroke-dasharray="540" stroke-dashoffset="0"
+              stroke="var(--green)" stroke-width="8" fill="none" stroke-linecap="round"/>
+          </svg>
+          <div class="pomo-inner">
+            <div class="pomo-time" id="pomo-display">25:00</div>
+            <div class="pomo-phase" id="pomo-fase">FOCO</div>
+          </div>
+        </div>
+        <div class="pomo-btns">
+          <button class="btn btn-b btn-lg" id="pomo-btn" onclick="togglePomo()">▶ Iniciar</button>
+          <button class="btn btn-lg" onclick="resetPomo()">↩ Reset</button>
+        </div>
+      </div>
+      <div class="win">
+        <div class="wbar"><div class="wd y"></div><span class="wtitle">Sessão sem consulta</span></div>
+        <div class="wbody">
+          <p style="font-size:.82rem;color:var(--ink2);margin-bottom:.65rem">Responda de memória, sem ver suas notas. Isso treina a memória real.</p>
+          <div class="field">
+            <label class="label">Tema ou conceito</label>
+            <input class="inp" id="sem-consulta-tema" placeholder="Ex: Cognição Distribuída">
+          </div>
+          <button class="btn btn-g btn-full" onclick="iniciarSemConsulta()">Iniciar sessão mental</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FEED ══ -->
+    <div class="pg" id="pg-feed">
+      <div class="sec-hdr">
+        <div class="sec-label" style="flex:1">learnfeed</div>
+        <button class="btn btn-sm btn-g" onclick="openModal('modal-post-novo')">+ Post</button>
+      </div>
+      <div id="feed-lista"></div>
+    </div>
+
+    <!-- ══ ANÁLISE IA ══ -->
+    <div class="pg" id="pg-analise">
+      <div class="sec-label" style="margin-bottom:.75rem">análise cognitiva · ia local</div>
+
+      <div class="win">
+        <div class="wbar"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div><span class="wtitle">🔬 Detector de Vieses — IA</span></div>
+        <div class="wbody">
+          <p style="font-size:.82rem;color:var(--ink2);margin-bottom:.65rem">Cole qualquer texto: argumento, notícia, parágrafo de artigo. A IA analisa vieses cognitivos e lógicos.</p>
+          <div class="field">
+            <label class="label">Texto para analisar</label>
+            <textarea class="ta" id="bias-input" style="min-height:110px" placeholder="Cole aqui o texto que deseja analisar..."></textarea>
+          </div>
+          <button class="btn btn-p btn-full btn-lg" id="btn-analisar" onclick="analisarVies()">🔬 Analisar com IA</button>
+          <div id="bias-resultado" style="margin-top:.75rem"></div>
+        </div>
+      </div>
+
+      <div class="win">
+        <div class="wbar"><div class="wd y"></div><span class="wtitle">✅ Verificador de Argumento (EPVT)</span></div>
+        <div class="wbody">
+          <div class="field">
+            <label class="label">Tese central</label>
+            <input class="inp" id="epvt-tese" placeholder="O que você está afirmando?">
+          </div>
+          <div class="field">
+            <label class="label">Argumento e evidência</label>
+            <textarea class="ta" id="epvt-arg" placeholder="Desenvolva o argumento com exemplos ou dados..."></textarea>
+          </div>
+          <div class="field">
+            <label class="label">Contra-argumento (opcional)</label>
+            <input class="inp" id="epvt-contra" placeholder="Qual seria a objeção mais forte?">
+          </div>
+          <button class="btn btn-p btn-full" id="btn-epvt" onclick="verificarArgumento()">✅ Verificar argumento</button>
+          <div id="epvt-resultado" style="margin-top:.75rem"></div>
+        </div>
+      </div>
+
+      <div class="win">
+        <div class="wbar"><div class="wd g"></div><span class="wtitle">🌿 Ignorância Deliberada</span></div>
+        <div class="wbody">
+          <p style="font-size:.82rem;color:var(--ink2);margin-bottom:.6rem">O que você decide <em>conscientemente não</em> consumir para proteger sua atenção?</p>
+          <div id="ig-lista" style="margin-bottom:.6rem"></div>
+          <div style="display:flex;gap:.4rem">
+            <input class="inp" id="ig-novo" placeholder="Ex: redes sociais após 21h" style="flex:1">
+            <button class="btn btn-g" onclick="addIgnorancia()">+ Adicionar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- ══ PROFESSOR ══ -->
+    <div class="pg" id="pg-professor">
+      <div class="teacher-hero">
+        <p class="mono" style="font-size:.68rem;color:var(--ink3);margin-bottom:.2rem">BRIO Professor</p>
+        <h2 style="font-size:1.25rem;margin-bottom:.25rem">Painel docente de mediação cognitiva</h2>
+        <p style="font-size:.84rem;color:var(--ink2)">Crie notas profundas, acompanhe dificuldades e transforme respostas dos alunos em intervenções pedagógicas.</p>
+      </div>
+
+      <div class="teacher-grid">
+        <div class="teacher-card"><div class="teacher-card-num" id="prof-total-atividades">0</div><div class="teacher-card-label">Atividades</div></div>
+        <div class="teacher-card"><div class="teacher-card-num" id="prof-total-respostas">0</div><div class="teacher-card-label">Respostas</div></div>
+        <div class="teacher-card"><div class="teacher-card-num" id="prof-total-dificuldades">0</div><div class="teacher-card-label">Dificuldades</div></div>
+        <div class="teacher-card"><div class="teacher-card-num" id="prof-total-facilidades">0</div><div class="teacher-card-label">Facilidades</div></div>
+      </div>
+
+      <div class="sec-hdr">
+        <div class="sec-label" style="flex:1">ações docentes</div>
+      </div>
+      <div class="qa-grid">
+        <div class="qa" onclick="openModal('modal-prof-atividade')"><div class="qa-i">🧾</div><div class="qa-t">Nota profunda</div><div class="qa-s">Criar unidade de estudo para a turma</div></div>
+        <div class="qa" onclick="openModal('modal-prof-feed')"><div class="qa-i">📣</div><div class="qa-t">Post docente</div><div class="qa-s">Enviar desafio ou orientação ao feed</div></div>
+        <div class="qa" onclick="profSimularTurma()"><div class="qa-i">👥</div><div class="qa-t">Simular turma</div><div class="qa-s">Gerar respostas para diagnóstico</div></div>
+        <div class="qa" onclick="profGerarRelatorio()"><div class="qa-i">📊</div><div class="qa-t">Relatório</div><div class="qa-s">Síntese pedagógica automática</div></div>
+      </div>
+
+      <div class="win">
+        <div class="wbar"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div><span class="wtitle">📌 Atividades criadas</span></div>
+        <div class="wbody" id="prof-atividades-lista"></div>
+      </div>
+
+      <div class="win">
+        <div class="wbar"><div class="wd y"></div><span class="wtitle">✍️ Registrar resposta de aluno</span></div>
+        <div class="wbody">
+          <div class="field"><label class="label">Atividade</label><select class="inp" id="prof-resp-atividade"></select></div>
+          <div class="field"><label class="label">Nome do aluno</label><input class="inp" id="prof-resp-aluno" placeholder="Ex: Maria Clara"></div>
+          <div class="field"><label class="label">Resposta do aluno</label><textarea class="ta" id="prof-resp-texto" placeholder="Cole ou digite a resposta do aluno para análise local..."></textarea></div>
+          <button class="btn btn-p btn-full" onclick="profSalvarRespostaManual()">🔬 Analisar e salvar resposta</button>
+        </div>
+      </div>
+
+      <div class="win">
+        <div class="wbar"><div class="wd g"></div><span class="wtitle">🧠 Diagnóstico da turma</span></div>
+        <div class="wbody" id="prof-diagnostico"></div>
+      </div>
+
+      <div class="win">
+        <div class="wbar"><div class="wd g"></div><span class="wtitle">📚 Respostas analisadas</span></div>
+        <div class="wbody" id="prof-respostas-lista"></div>
+      </div>
+    </div>
+
+    <!-- ══ PERFIL ══ -->
+    <div class="pg" id="pg-perfil">
+      <div class="sec-label" style="margin-bottom:.75rem">meu perfil</div>
+      <div class="win">
+        <div class="wbody" style="text-align:center">
+          <div class="pav-ring" id="pav-ring" onclick="document.getElementById('file-avatar').click()">
+            <span id="pav-emoji">🧠</span>
+            <img id="pav-img" alt="">
+          </div>
+          <input type="file" id="file-avatar" accept="image/*" onchange="loadAvatar(this)">
+          <h3 class="serif" style="font-size:1.3rem" id="perfil-nome">—</h3>
+          <p class="mono" style="font-size:.7rem;color:var(--ink3);margin:.2rem 0 .5rem">Nível <span id="perfil-nivel">1</span> · <span id="perfil-xp-val">0</span> XP</p>
+          <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-fill" style="width:0%"></div></div>
+          <p class="mono" style="font-size:.65rem;color:var(--ink3);margin-top:.1rem" id="xp-label">0/100 para próximo nível</p>
+          <div class="skill-grid" id="skill-grid"></div>
+        </div>
+      </div>
+      <div class="sec-label" style="margin-bottom:.6rem">configurações</div>
+      <div id="config-lista"></div>
+    </div>
+
+  </div><!-- /main -->
+
+  <nav id="bottomnav">
+    <button class="nav-btn on" id="nav-dash" onclick="navTo('dash')"><span class="ni">🏠</span>Início</button>
+    <button class="nav-btn" id="nav-para" onclick="navTo('para')"><span class="ni">📁</span>PARA</button>
+    <button class="nav-btn" id="nav-cards" onclick="navTo('cards')"><span class="ni">🃏</span>Cards</button>
+    <button class="nav-btn" id="nav-feed" onclick="navTo('feed')"><span class="ni">📰</span>Feed</button>
+    <button class="nav-btn" id="nav-analise" onclick="navTo('analise')"><span class="ni">🔬</span>IA</button>
+    <button class="nav-btn" id="nav-grafo" onclick="navTo('grafo')"><span class="ni">🕸</span>Grafo</button>
+    <button class="nav-btn" id="nav-professor" onclick="navTo('professor')"><span class="ni">👩‍🏫</span>Prof.</button>
+    <button class="nav-btn" id="nav-perfil" onclick="navTo('perfil')"><span class="ni">👤</span>Perfil</button>
+  </nav>
+</div>
+
+<!-- ════════ MODALS ════════ -->
+
+<!-- Nota Rápida -->
+<div class="overlay hidden" id="modal-nota-rapida">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr"><div class="modal-title">✏️ Nota Rápida</div><button class="modal-close" onclick="closeModal('modal-nota-rapida')">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label class="label">Título</label><input class="inp" id="nr-titulo" placeholder="Título da nota"></div>
+      <div class="field"><label class="label">Conteúdo</label><textarea class="ta" id="nr-corpo" placeholder="Anote agora, aprofunde depois..."></textarea></div>
+      <div class="field">
+        <label class="label">Pasta PARA</label>
+        <select class="inp" id="nr-pasta">
+          <option value="recursos">📚 Recursos</option>
+          <option value="projetos">📌 Projetos</option>
+          <option value="areas">🗂 Áreas</option>
+          <option value="arquivo">🗃 Arquivo</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-nota-rapida')">Cancelar</button>
+      <button class="btn btn-g" onclick="salvarNotaRapida()">💾 Salvar nota</button>
+    </div>
+  </div>
+</div>
+
+<!-- Nota Profunda -->
+<div class="overlay hidden" id="modal-nota-nova">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr"><div class="modal-title">📝 Nova Nota Profunda</div><button class="modal-close" onclick="closeModal('modal-nota-nova')">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label class="label">Título *</label><input class="inp" id="nn-titulo" placeholder="Sobre o que é esta nota?"></div>
+      <div class="nfield">
+        <div class="nf-head" onclick="toggleNField(this)"><span class="nf-icon">📖</span><span class="nf-label">Conteúdo</span><span class="nf-hint">O que você aprendeu?</span></div>
+        <div class="nf-body open"><textarea class="ta" id="nn-conteudo" placeholder="Escreva com suas próprias palavras..."></textarea></div>
+      </div>
+      <div class="nfield">
+        <div class="nf-head" onclick="toggleNField(this)"><span class="nf-icon">🔍</span><span class="nf-label">Interpretação Pessoal</span><span class="nf-hint">O que significa para você?</span></div>
+        <div class="nf-body"><textarea class="ta" id="nn-interp" placeholder="Como você interpreta isso? O que ressoa?"></textarea></div>
+      </div>
+      <div class="nfield">
+        <div class="nf-head" onclick="toggleNField(this)"><span class="nf-icon">🌍</span><span class="nf-label">Contexto</span><span class="nf-hint">Onde/quando se aplica?</span></div>
+        <div class="nf-body"><textarea class="ta" id="nn-contexto" placeholder="Em que situações isso é válido?"></textarea></div>
+      </div>
+      <div class="nfield">
+        <div class="nf-head" onclick="toggleNField(this)"><span class="nf-icon">⚠️</span><span class="nf-label">Limitações</span><span class="nf-hint">Onde essa ideia falha?</span></div>
+        <div class="nf-body"><textarea class="ta" id="nn-limite" placeholder="Pontos fracos, exceções, problemas..."></textarea></div>
+      </div>
+      <div class="nfield">
+        <div class="nf-head" onclick="toggleNField(this)"><span class="nf-icon">❌</span><span class="nf-label">Contraexemplo</span><span class="nf-hint">Quando não funciona?</span></div>
+        <div class="nf-body"><textarea class="ta" id="nn-contra" placeholder="Um caso onde esta ideia seria falsa..."></textarea></div>
+      </div>
+      <div class="nfield">
+        <div class="nf-head" onclick="toggleNField(this)"><span class="nf-icon">💛</span><span class="nf-label">Reflexão Emocional</span><span class="nf-hint">Como isso te faz sentir?</span></div>
+        <div class="nf-body"><textarea class="ta" id="nn-emocao" placeholder="Que emoção ou memória esta ideia evoca?"></textarea></div>
+      </div>
+      <div class="nfield">
+        <div class="nf-head" onclick="toggleNField(this)"><span class="nf-icon">🔗</span><span class="nf-label">Conexões</span><span class="nf-hint">Liga a quê?</span></div>
+        <div class="nf-body">
+          <div id="nn-conn-lista" style="display:flex;flex-wrap:wrap;gap:.25rem;margin-bottom:.4rem"></div>
+          <div style="display:flex;gap:.4rem">
+            <input class="inp" id="nn-conn-input" placeholder="Nome de outra nota ou conceito..." style="flex:1">
+            <button class="btn btn-sm btn-g" onclick="addConexao()">+ Ligar</button>
+          </div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:.6rem">
+        <label class="label">Pasta PARA</label>
+        <select class="inp" id="nn-pasta">
+          <option value="recursos">📚 Recursos</option>
+          <option value="projetos">📌 Projetos</option>
+          <option value="areas">🗂 Áreas</option>
+          <option value="arquivo">🗃 Arquivo</option>
+        </select>
+      </div>
+      <div class="alert alert-p" style="margin-top:.5rem">
+        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+          <span class="ai-badge">IA auto</span>
+          <label style="font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:.3rem">
+            <input type="checkbox" id="opt-fc-auto" checked> Gerar flashcards automaticamente
+          </label>
+          <label style="font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:.3rem">
+            <input type="checkbox" id="opt-grafo-auto"> Adicionar ao grafo
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-nota-nova')">Cancelar</button>
+      <button class="btn btn-g" onclick="salvarNotaProfunda()">💾 Salvar nota completa</button>
+    </div>
+  </div>
+</div>
+
+<!-- Ver Nota -->
+<div class="overlay hidden" id="modal-ver-nota">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr">
+      <div class="modal-title" id="vn-titulo">Nota</div>
+      <div style="display:flex;gap:.3rem">
+        <button class="btn btn-xs btn-p" onclick="gerarFlashcardDaNota()" title="Gerar flashcard">🃏</button>
+        <button class="btn btn-xs btn-r" onclick="deletarNotaAtual()">🗑</button>
+        <button class="modal-close" onclick="closeModal('modal-ver-nota')">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="vn-corpo"></div>
+  </div>
+</div>
+
+<!-- Novo Flashcard -->
+<div class="overlay hidden" id="modal-fc-novo">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr"><div class="modal-title">🃏 Novo Flashcard</div><button class="modal-close" onclick="closeModal('modal-fc-novo')">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label class="label">Pergunta (frente)</label><textarea class="ta" id="fc-pergunta" placeholder="O que você quer memorizar?"></textarea></div>
+      <div class="field"><label class="label">Resposta (verso)</label><textarea class="ta" id="fc-resposta" placeholder="Resposta, explicação ou conceito..."></textarea></div>
+      <div class="field">
+        <label class="label">Categoria</label>
+        <select class="inp" id="fc-cat">
+          <option value="geral">Geral</option>
+          <option value="ocmt">OCMT / Cognição</option>
+          <option value="pkm">PKM</option>
+          <option value="estudo">Estudo</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-fc-novo')">Cancelar</button>
+      <button class="btn btn-g" onclick="salvarFlashcard()">💾 Salvar card</button>
+    </div>
+  </div>
+</div>
+
+<!-- Novo Post Feed -->
+<div class="overlay hidden" id="modal-post-novo">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr"><div class="modal-title">📰 Novo Post</div><button class="modal-close" onclick="closeModal('modal-post-novo')">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label class="label">Conteúdo</label><textarea class="ta" id="post-corpo" placeholder="Compartilhe um insight, reflexão ou descoberta..." style="min-height:100px"></textarea></div>
+      <div class="field"><label class="label">Link de referência (opcional)</label><input class="inp" id="post-link" placeholder="https://..."></div>
+      <div class="field"><label class="label">Imagem ou arquivo (opcional)</label><input type="file" id="post-arquivo" accept="image/*,.pdf,.txt,.doc,.docx,.ppt,.pptx"><button class="btn btn-sm" onclick="document.getElementById('post-arquivo').click()">📎 Escolher arquivo</button><div class="status-mini" id="post-arquivo-status">Nenhum arquivo selecionado.</div></div>
+      <div class="field"><label class="label">Pergunta para a comunidade (opcional)</label><input class="inp" id="post-pergunta" placeholder="Que dúvida isso levanta?"></div>
+      <div class="field">
+        <label class="label">Tipo</label>
+        <select class="inp" id="post-tipo">
+          <option value="reflexao">💭 Reflexão</option>
+          <option value="insight">💡 Insight</option>
+          <option value="resumo">📖 Resumo</option>
+          <option value="duvida">❓ Dúvida</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-post-novo')">Cancelar</button>
+      <button class="btn btn-g" onclick="publicarPost()">📤 Publicar</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Professor: Nova Atividade / Nota Profunda -->
+<div class="overlay hidden" id="modal-prof-atividade">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr"><div class="modal-title">👩‍🏫 BRIO Professor · Nota profunda</div><button class="modal-close" onclick="closeModal('modal-prof-atividade')">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label class="label">Título do conteúdo estudado *</label><input class="inp" id="prof-atv-titulo" placeholder="Ex: Substantivos: classificações"></div>
+      <div class="field"><label class="label">Componente curricular</label><input class="inp" id="prof-atv-comp" placeholder="Ex: Língua Portuguesa"></div>
+      <div class="field"><label class="label">Série / ano</label><input class="inp" id="prof-atv-ano" placeholder="Ex: 8º ano"></div>
+      <div class="field"><label class="label">Objetivo da aula</label><textarea class="ta" id="prof-atv-objetivo" placeholder="O que o aluno deve desenvolver cognitivamente?"></textarea></div>
+      <div class="field"><label class="label">Conteúdo / nota profunda do professor</label><textarea class="ta" id="prof-atv-conteudo" style="min-height:115px" placeholder="Explique o conteúdo, conceitos-chave, orientações, exemplos e observações didáticas."></textarea></div>
+      <div class="field"><label class="label">Exemplos</label><textarea class="ta" id="prof-atv-exemplos" placeholder="Exemplos que serão usados pelo aluno."></textarea></div>
+      <div class="field"><label class="label">Materiais ou links</label><input class="inp" id="prof-atv-materiais" placeholder="Links, páginas, vídeos ou referências."></div>
+      <div class="field">
+        <label class="label">Campos que o aluno deverá preencher</label>
+        <div class="check-list">
+          <label class="check-line"><input type="checkbox" class="prof-campo" value="Explique com suas palavras" checked> Explique com suas palavras</label>
+          <label class="check-line"><input type="checkbox" class="prof-campo" value="Dê exemplos" checked> Dê exemplos</label>
+          <label class="check-line"><input type="checkbox" class="prof-campo" value="Classifique ou organize"> Classifique ou organize</label>
+          <label class="check-line"><input type="checkbox" class="prof-campo" value="Justifique sua resposta" checked> Justifique sua resposta</label>
+          <label class="check-line"><input type="checkbox" class="prof-campo" value="Como você verificou? (EPVT)" checked> Como você verificou? (EPVT)</label>
+          <label class="check-line"><input type="checkbox" class="prof-campo" value="O que foi fácil?"> O que foi fácil?</label>
+          <label class="check-line"><input type="checkbox" class="prof-campo" value="O que foi difícil?"> O que foi difícil?</label>
+        </div>
+      </div>
+      <div class="alert alert-b">Ao salvar, a atividade fica no painel do professor. Você também pode enviá-la para o feed do aluno e gerar diagnóstico de turma.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-prof-atividade')">Cancelar</button>
+      <button class="btn btn-g" onclick="profSalvarAtividade()">💾 Salvar atividade</button>
+    </div>
+  </div>
+</div>
+
+<!-- Professor: Post docente -->
+<div class="overlay hidden" id="modal-prof-feed">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr"><div class="modal-title">📣 Post docente no feed</div><button class="modal-close" onclick="closeModal('modal-prof-feed')">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label class="label">Tipo de postagem</label><select class="inp" id="prof-feed-tipo"><option value="desafio">🎯 Desafio da semana</option><option value="revisao">⏰ Lembrete de revisão</option><option value="explicacao">📖 Explicação complementar</option><option value="pergunta">❓ Pergunta disparadora</option><option value="material">📎 Material de apoio</option></select></div>
+      <div class="field"><label class="label">Mensagem</label><textarea class="ta" id="prof-feed-msg" placeholder="Ex: Hoje vamos verificar se substantivos abstratos podem ser identificados por toque, visão ou ideia."></textarea></div>
+      <div class="field"><label class="label">Pergunta para os alunos</label><input class="inp" id="prof-feed-pergunta" placeholder="Ex: Qual substantivo você classificaria como abstrato e por quê?"></div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeModal('modal-prof-feed')">Cancelar</button><button class="btn btn-g" onclick="profPublicarFeed()">📤 Publicar no feed</button></div>
+  </div>
+</div>
+
+<!-- Add PKM Item -->
+<div class="overlay hidden" id="modal-pkm-add">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr"><div class="modal-title" id="pkm-modal-titulo">+ Novo item</div><button class="modal-close" onclick="closeModal('modal-pkm-add')">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label class="label">Título</label><input class="inp" id="pkm-titulo" placeholder="Título do item"></div>
+      <div class="field"><label class="label">Descrição</label><textarea class="ta" id="pkm-desc" placeholder="Descrição, detalhes, link..."></textarea></div>
+      <input type="hidden" id="pkm-pasta-alvo">
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-pkm-add')">Cancelar</button>
+      <button class="btn btn-g" onclick="salvarItemPKM()">+ Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sessão Sem Consulta -->
+<div class="overlay hidden" id="modal-sem-consulta">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr"><div class="modal-title">🧠 Sessão Mental</div><button class="modal-close" onclick="closeModal('modal-sem-consulta')">✕</button></div>
+    <div class="modal-body">
+      <div class="alert alert-g" id="sc-desafio" style="font-size:.88rem;margin-bottom:.75rem"></div>
+      <p class="mono" style="font-size:.74rem;color:var(--ink3);margin-bottom:.6rem">Responda sem consultar nada. Ative a memória real.</p>
+      <div class="field"><label class="label">Sua resposta</label><textarea class="ta" id="sc-resposta" placeholder="Escreva o que você lembra..." style="min-height:100px"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-sem-consulta')">Cancelar</button>
+      <button class="btn btn-b" onclick="enviarSemConsulta()">Registrar e comparar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ════════════════════════════════
+     BRIO · JavaScript Completo
+════════════════════════════════ -->
+<!-- Firebase compat SDK para login por nick/anônimo + Realtime Database -->
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+<script>
+'use strict';
+// ─────────────────────────────────────────────────────────
+// FIREBASE · BRIO ONLINE
+// ─────────────────────────────────────────────────────────
+const BRIO_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyB3bFb9EkPAxaca52SHm-ZkWM3IDoKNPJg",
+  authDomain: "brio-e1544.firebaseapp.com",
+  databaseURL: "https://brio-e1544-default-rtdb.firebaseio.com",
+  projectId: "brio-e1544",
+  storageBucket: "brio-e1544.firebasestorage.app",
+  messagingSenderId: "143551031555",
+  appId: "1:143551031555:web:7f160fd48caa3af30ae136"
+};
+let BRIO_DB = null;
+let BRIO_AUTH = null;
+let BRIO_ONLINE = false;
+let BRIO_UID = null;
+
+// ─────────────────────────────────────────────────────────
+// 0. ESTADO GLOBAL + PERSISTÊNCIA
+// ─────────────────────────────────────────────────────────
+const STORAGE_KEY = 'brio_app_v5';
+
+const DEFAULT_STATE = {
+  onboarded: false,
+  nome: '',
+  nick: '',
+  onlineFeed: false,
+  xp: 0,
+  streakDias: [false,true,true,false,true,true,false],
+  ultimoAcesso: '',
+  pkm: {
+    projetos: [
+      {id:1, titulo:'Congresso SESI-SP IV', desc:'Resumo aprovado → preparar slides e fala de 10min'},
+      {id:2, titulo:'Artigo OCMT completo', desc:'Após aprovação: escrever 8-12 páginas'}
+    ],
+    areas: [
+      {id:3, titulo:'Produção Acadêmica', desc:'IC, artigos, comunicações'},
+      {id:4, titulo:'Planejamento de Aulas', desc:'Português 8º ano — argumentação'}
+    ],
+    recursos: [
+      {id:5, titulo:'Clark & Chalmers (1998)', desc:'The Extended Mind — mente estendida'},
+      {id:6, titulo:'Hutchins (1995)', desc:'Cognition in the Wild — cognição distribuída'},
+      {id:7, titulo:'Tiago Forte — PARA', desc:'Building a Second Brain — método PKM'}
+    ],
+    arquivo: [
+      {id:8, titulo:'Rascunhos iniciais OCMT', desc:'Ideias do primeiro semestre — concluído'}
+    ]
+  },
+  notas: [],
+  flashcards: [
+    {id:'fc1', pergunta:'O que é cognição distribuída?', resposta:'O pensamento ocorre em rede entre sujeito, artefatos e ambiente — não apenas dentro da cabeça. (Hutchins, 1995)', cat:'ocmt', facilidade:0, proximaRevisao:0, revisoes:0},
+    {id:'fc2', pergunta:'Qual a diferença entre PKM e simples organização digital?', resposta:'PKM é infraestrutura de externalização semântica: organiza para AGIR, não apenas acumular. Reduz custo epistêmico e amplia autonomia.', cat:'pkm', facilidade:0, proximaRevisao:0, revisoes:0},
+    {id:'fc3', pergunta:'O que é inibição saudável na OCMT?', resposta:'Ignorância deliberada: a prática de filtrar conscientemente o que não consumir, protegendo atenção e autonomia cognitiva.', cat:'ocmt', facilidade:0, proximaRevisao:0, revisoes:0},
+    {id:'fc4', pergunta:'Quais os 3 pilares práticos da OCMT?', resposta:'1) PKM estruturado (memória estendida)\n2) Verificação procedimental (EPVT)\n3) Inibição saudável (ignorância deliberada)', cat:'ocmt', facilidade:0, proximaRevisao:0, revisoes:0}
+  ],
+  feed: [
+    {id:'p1', autor:'Beatriz C.', av:'📖', tipo:'reflexao', corpo:'A metacognição não é um talento — é uma prática. Todo dia você pode aprender a pensar melhor sobre como você pensa.', pergunta:'Você já parou para observar como você aprende?', reacoes:{entendi:14,duvida:3,exemplo:7}, minhaReacao:null, tempo:'2h'},
+    {id:'p2', autor:'Lucas F.', av:'🧩', tipo:'insight', corpo:'Escrever sobre o que você aprendeu supera reler em 80% dos estudos de memória. Geração ativa > revisão passiva.', pergunta:'Quando foi a última vez que escreveu sobre algo que aprendeu?', reacoes:{entendi:31,duvida:5,exemplo:12}, minhaReacao:null, tempo:'5h'}
+  ],
+  grafo: {
+    nos: [
+      {id:'g1', label:'OCMT', x:50, y:35},
+      {id:'g2', label:'PKM', x:78, y:22},
+      {id:'g3', label:'Cognição Distribuída', x:20, y:58},
+      {id:'g4', label:'Metacognição', x:74, y:65}
+    ],
+    arestas: [['g1','g2'],['g1','g3'],['g1','g4'],['g2','g4']]
+  },
+  pomo: {rodando:false, fase:'foco', restante:25*60, sessoes:0},
+  ignorancias: [],
+  config: {limiteFeed:true, lembretes:true, darkMode:false, fontSize:'normal', onlineFeed:false, soundFx:true},
+  postHoje: 0,
+  dataPost: '',
+  nextId: 200
+};
+
+let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+function salvarEstado() {
+  try {
+    const payload = JSON.stringify(S);
+    localStorage.setItem(STORAGE_KEY, payload);
+    localStorage.setItem(STORAGE_KEY + '_backup', payload);
+  } catch(e) { console.warn('Falha ao salvar estado BRIO', e); }
+}
+window.addEventListener('beforeunload', salvarEstado);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') salvarEstado(); });
+function carregarEstado() {
+  try {
+    const d = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(STORAGE_KEY + '_backup');
+    if (d) {
+      const salvo = JSON.parse(d);
+      // merge deep to keep defaults for new keys
+      S = Object.assign({}, DEFAULT_STATE, salvo);
+      S.pkm = Object.assign({}, DEFAULT_STATE.pkm, salvo.pkm || {});
+      S.grafo = salvo.grafo || DEFAULT_STATE.grafo;
+      S.pomo  = Object.assign({}, DEFAULT_STATE.pomo, salvo.pomo || {});
+      S.config = Object.assign({}, DEFAULT_STATE.config, salvo.config || {});
+    }
+  } catch(e) { S = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+}
+carregarEstado();
+
+// ─────────────────────────────────────────────────────────
+// PATCH BRIO V4: persistência forte para Android/Capacitor
+// Salva em 3 camadas: localStorage, IndexedDB e Preferences nativo
+// quando o plugin @capacitor/preferences estiver instalado.
+// ─────────────────────────────────────────────────────────
+let BRIO_PERSIST_RESTORE_DONE = false;
+let BRIO_LAST_SAVED_PAYLOAD = '';
+let BRIO_AUTOSAVE_TIMER = null;
+const BRIO_IDB_NAME = 'brio_persistencia_v4';
+const BRIO_IDB_STORE = 'estado';
+const BRIO_IDB_KEY = STORAGE_KEY;
+
+function BRIO_hasRealUserData(st=S) {
+  try {
+    return !!(
+      st.onboarded || st.nome || st.nick || st.avatarUrl ||
+      (st.notas && st.notas.length) ||
+      (st.ignorancias && st.ignorancias.length) ||
+      (st.xp && st.xp > 0) ||
+      (st.nextId && st.nextId > 200) ||
+      (st.config && (st.config.darkMode || st.config.fontSize !== 'normal' || st.config.onlineFeed || st.config.soundFx === false))
+    );
+  } catch(e) { return false; }
+}
+
+function BRIO_mergeState(salvo) {
+  if (!salvo || typeof salvo !== 'object') return false;
+  S = Object.assign({}, DEFAULT_STATE, salvo);
+  S.pkm = Object.assign({}, DEFAULT_STATE.pkm, salvo.pkm || {});
+  S.grafo = salvo.grafo || DEFAULT_STATE.grafo;
+  S.pomo  = Object.assign({}, DEFAULT_STATE.pomo, salvo.pomo || {});
+  S.config = Object.assign({}, DEFAULT_STATE.config, salvo.config || {});
+  if (!S.config) S.config = {};
+  if (typeof S.config.soundFx === 'undefined') S.config.soundFx = true;
+  return true;
+}
+
+function BRIO_renderTudo() {
+  try {
+    aplicarTema(); setarData(); atualizarStats(); renderPARA(); renderNotas();
+    renderFlashcards(); renderFeed(); renderGrafo(); renderIgnorancias();
+    renderPerfil(); renderPomoUI(); showPeirce('alfa'); configurarPreviewArquivoPost();
+  } catch(e) { console.warn('Render BRIO após restauração falhou:', e); }
+}
+
+function BRIO_idbOpen() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) return resolve(null);
+    const req = indexedDB.open(BRIO_IDB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(BRIO_IDB_STORE)) db.createObjectStore(BRIO_IDB_STORE);
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function BRIO_idbSet(value) {
+  try {
+    const db = await BRIO_idbOpen(); if (!db) return;
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(BRIO_IDB_STORE, 'readwrite');
+      tx.objectStore(BRIO_IDB_STORE).put(value, BRIO_IDB_KEY);
+      tx.oncomplete = resolve; tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+  } catch(e) { console.warn('BRIO IndexedDB save falhou:', e); }
+}
+
+async function BRIO_idbGet() {
+  try {
+    const db = await BRIO_idbOpen(); if (!db) return null;
+    const value = await new Promise((resolve, reject) => {
+      const tx = db.transaction(BRIO_IDB_STORE, 'readonly');
+      const req = tx.objectStore(BRIO_IDB_STORE).get(BRIO_IDB_KEY);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error);
+    });
+    db.close();
+    return value;
+  } catch(e) { console.warn('BRIO IndexedDB load falhou:', e); return null; }
+}
+
+function BRIO_getPreferencesPlugin() {
+  try {
+    return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences
+      ? window.Capacitor.Plugins.Preferences
+      : null;
+  } catch(e) { return null; }
+}
+
+async function BRIO_prefSet(value) {
+  try {
+    const Preferences = BRIO_getPreferencesPlugin();
+    if (Preferences) await Preferences.set({ key: STORAGE_KEY, value });
+  } catch(e) { console.warn('BRIO Preferences save falhou:', e); }
+}
+
+async function BRIO_prefGet() {
+  try {
+    const Preferences = BRIO_getPreferencesPlugin();
+    if (!Preferences) return null;
+    const r = await Preferences.get({ key: STORAGE_KEY });
+    return r && r.value ? r.value : null;
+  } catch(e) { console.warn('BRIO Preferences load falhou:', e); return null; }
+}
+
+function BRIO_parseStatePayload(v) {
+  try { return v ? JSON.parse(v) : null; } catch(e) { return null; }
+}
+
+function BRIO_chooseNewest(states) {
+  return states.filter(Boolean).sort((a,b)=>(b.__brioSavedAt||0)-(a.__brioSavedAt||0))[0] || null;
+}
+
+async function BRIO_restaurarEstadoForte() {
+  const candidates = [];
+  candidates.push(BRIO_parseStatePayload(localStorage.getItem(STORAGE_KEY)));
+  candidates.push(BRIO_parseStatePayload(localStorage.getItem(STORAGE_KEY + '_backup')));
+  candidates.push(BRIO_parseStatePayload(sessionStorage.getItem(STORAGE_KEY + '_session')));
+  candidates.push(BRIO_parseStatePayload(await BRIO_idbGet()));
+  candidates.push(BRIO_parseStatePayload(await BRIO_prefGet()));
+  const newest = BRIO_chooseNewest(candidates);
+  if (newest && (newest.__brioSavedAt || BRIO_hasRealUserData(newest))) {
+    BRIO_mergeState(newest);
+  }
+  BRIO_PERSIST_RESTORE_DONE = true;
+  salvarEstado();
+  return !!newest;
+}
+
+// Sobrescreve o salvamento antigo com uma versão mais resistente.
+const salvarEstadoBRIOBasico = salvarEstado;
+salvarEstado = function salvarEstadoForte() {
+  try {
+    // Evita que uma abertura vazia sobrescreva um backup nativo/IndexedDB antes da restauração terminar.
+    if (!BRIO_PERSIST_RESTORE_DONE && !BRIO_hasRealUserData(S) && !localStorage.getItem(STORAGE_KEY)) return;
+    const payload = JSON.stringify(Object.assign({}, S, { __brioSavedAt: Date.now() }));
+    BRIO_LAST_SAVED_PAYLOAD = payload;
+    try { localStorage.setItem(STORAGE_KEY, payload); } catch(e) {}
+    try { localStorage.setItem(STORAGE_KEY + '_backup', payload); } catch(e) {}
+    try { sessionStorage.setItem(STORAGE_KEY + '_session', payload); } catch(e) {}
+    BRIO_idbSet(payload);
+    BRIO_prefSet(payload);
+  } catch(e) {
+    console.warn('Falha ao salvar estado BRIO forte', e);
+    try { salvarEstadoBRIOBasico(); } catch(_) {}
+  }
+};
+
+function BRIO_instalarAutosave() {
+  if (BRIO_AUTOSAVE_TIMER) clearInterval(BRIO_AUTOSAVE_TIMER);
+  BRIO_AUTOSAVE_TIMER = setInterval(() => {
+    try {
+      const payload = JSON.stringify(Object.assign({}, S, { __brioSavedAt: 0 }));
+      if (payload !== BRIO_LAST_SAVED_PAYLOAD) salvarEstado();
+    } catch(e) {}
+  }, 1500);
+  ['pagehide','blur','freeze','beforeunload'].forEach(evt => window.addEventListener(evt, salvarEstado, { passive:true }));
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') salvarEstado(); });
+  try {
+    const App = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+    if (App && App.addListener) {
+      App.addListener('pause', salvarEstado);
+      App.addListener('appStateChange', ({ isActive }) => { if (!isActive) salvarEstado(); });
+    }
+  } catch(e) {}
+}
+BRIO_instalarAutosave();
+
+async function BRIO_BOOT_INICIAL() {
+  await BRIO_restaurarEstadoForte();
+  if (S.onboarded) {
+    const ob = document.getElementById('ob-screen');
+    if (ob) ob.classList.add('hidden');
+    iniciarApp();
+    BRIO_renderTudo();
+  }
+}
+
+function gerarId(prefixo='') {
+  return prefixo + (++S.nextId) + '_' + Date.now().toString(36);
+}
+
+function xpGanhar(n) {
+  S.xp = (S.xp || 0) + n;
+  const hoje = new Date().toDateString();
+  if (S.ultimoAcesso !== hoje) {
+    S.ultimoAcesso = hoje;
+    S.streakDias = [...(S.streakDias || [false,false,false,false,false,false,false]).slice(1), true];
+  }
+  salvarEstado();
+  atualizarStats();
+}
+
+// ─────────────────────────────────────────────────────────
+// 1. UTILITÁRIOS UI
+// ─────────────────────────────────────────────────────────
+function toast(msg, dur=2400) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), dur);
+}
+
+function limparNick(v) {
+  return String(v || '')
+    .trim()
+    .replace(/^@+/, '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9_]/g, '_')
+    .replace(/_+/g, '_')
+    .slice(0, 18);
+}
+
+function pedirNickBRIO(forcar=false) {
+  let salvo = limparNick(S.nick || localStorage.getItem('brio_nick') || '');
+  if (salvo && salvo.length >= 3) return salvo;
+  if (!forcar) return '';
+  let n = '';
+  while (!n || n.length < 3) {
+    n = limparNick(prompt('Escolha seu nick para aparecer no feed online do BRIO. Ex: camila_ocmt') || '');
+    if (!n) { toast('Modo online não ativado. Você continua usando o BRIO local.'); return ''; }
+    if (n.length < 3) alert('Use pelo menos 3 caracteres.');
+  }
+  return n;
+}
+
+function tempoRelativoBRIO(ts) {
+  if (!ts) return 'agora';
+  const dif = Math.max(0, Date.now() - ts);
+  const min = Math.floor(dif / 60000);
+  if (min < 1) return 'agora';
+  if (min < 60) return min + 'min';
+  const h = Math.floor(min / 60);
+  if (h < 24) return h + 'h';
+  const d = Math.floor(h / 24);
+  return d + 'd';
+}
+
+function normalizarPostOnline(id, p) {
+  p = p || {};
+  const reactionsByUser = p.reactionsByUser || {};
+  const vals = Object.values(reactionsByUser).filter(Boolean);
+  const counts = {
+    entendi: vals.filter(x => x === 'entendi').length,
+    duvida: vals.filter(x => x === 'duvida').length,
+    exemplo: vals.filter(x => x === 'exemplo').length
+  };
+  const comentarios = Object.values(p.comments || {})
+    .sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0))
+    .map(c => ({autor:c.autor || c.autorNick || 'alguém', texto:c.texto || '', data:c.data || ''}));
+  return {
+    id, autor: p.autor || p.autorNick || '@brio', av: p.av || '🧠', tipo: p.tipo || 'reflexao',
+    corpo: p.corpo || '', pergunta: p.pergunta || '', reacoes: counts,
+    minhaReacao: BRIO_UID ? (reactionsByUser[BRIO_UID] || null) : null,
+    tempo: tempoRelativoBRIO(p.createdAt), links: p.links || [], arquivo: p.arquivo || null, comentarios
+  };
+}
+
+async function prepararFirebaseBRIO() {
+  if (!window.firebase || !firebase.initializeApp) throw new Error('Firebase SDK não carregou');
+  if (!firebase.apps.length) firebase.initializeApp(BRIO_FIREBASE_CONFIG);
+  BRIO_AUTH = firebase.auth();
+  BRIO_DB = firebase.database();
+  if (!BRIO_AUTH.currentUser) {
+    const cred = await BRIO_AUTH.signInAnonymously();
+    BRIO_UID = cred.user.uid;
+  } else {
+    BRIO_UID = BRIO_AUTH.currentUser.uid;
+  }
+}
+
+async function iniciarFirebaseBRIO(forcarNick=false) {
+  try {
+    await prepararFirebaseBRIO();
+    const nick = pedirNickBRIO(forcarNick);
+    if (!nick) { BRIO_ONLINE = false; S.config.onlineFeed = false; salvarEstado(); renderPerfil(); return false; }
+    S.nick = nick;
+    if (!S.nome || S.nome === 'Estudante' || S.nome.startsWith('@')) S.nome = '@' + nick;
+    S.config.onlineFeed = true;
+    localStorage.setItem('brio_nick', nick);
+    salvarEstado();
+    await BRIO_DB.ref('users/' + BRIO_UID).update({nick, nome:'@'+nick, atualizadoEm: Date.now()});
+    BRIO_ONLINE = true;
+    toast('🌐 Feed online ativado como @' + nick);
+    escutarFeedOnline();
+    renderPerfil();
+    return true;
+  } catch (e) {
+    console.error(e);
+    BRIO_ONLINE = false;
+    toast('⚠️ Feed online indisponível. Modo local ativado.', 3500);
+    renderPerfil();
+    return false;
+  }
+}
+
+function desligarFeedOnlineBRIO() {
+  try { if (BRIO_DB) BRIO_DB.ref('posts').off(); } catch(e) {}
+  BRIO_ONLINE = false;
+  S.config.onlineFeed = false;
+  salvarEstado();
+  renderFeed();
+  renderPerfil();
+  toast('Feed online desligado. Você continua no modo local.');
+}
+
+async function alternarFeedOnline() {
+  if (BRIO_ONLINE || S.config.onlineFeed) desligarFeedOnlineBRIO();
+  else await iniciarFirebaseBRIO(true);
+}
+
+function escutarFeedOnline() {
+  if (!BRIO_DB) return;
+  BRIO_DB.ref('posts').limitToLast(50).off();
+  BRIO_DB.ref('posts').limitToLast(50).on('value', snap => {
+    const val = snap.val() || {};
+    const posts = Object.entries(val).map(([id,p]) => normalizarPostOnline(id,p)).sort((a,b) => ((val[b.id] && val[b.id].createdAt) || 0) - ((val[a.id] && val[a.id].createdAt) || 0));
+    if (posts.length) S.feed = posts;
+    renderFeed();
+  }, err => { console.error(err); toast('⚠️ Não consegui ler o feed online.'); });
+}
+
+function openModal(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('hidden');
+}
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('hidden');
+  const main = document.getElementById('main');
+  if (main) main.style.overflowY = 'auto';
+}
+// close on backdrop
+document.querySelectorAll('.overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov) { closeModal(ov.id); } });
+});
+
+function navTo(pg) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+  const p = document.getElementById('pg-' + pg);
+  const b = document.getElementById('nav-' + pg);
+  if (p) p.classList.add('on');
+  if (b) b.classList.add('on');
+  const mainScroll = document.getElementById('main'); if (mainScroll) { try { mainScroll.scrollTo({top:0,left:0,behavior:'auto'}); } catch(e) { mainScroll.scrollTop = 0; } }
+  // page-specific renders
+  if (pg === 'para')    renderPARA();
+  if (pg === 'notas')   renderNotas();
+  if (pg === 'cards')   renderFlashcards();
+  if (pg === 'grafo')   renderGrafo();
+  if (pg === 'analise') renderIgnorancias();
+  if (pg === 'perfil')  renderPerfil();
+  if (pg === 'feed')    renderFeed();
+  if (pg === 'professor') renderProfessor();
+  if (pg === 'foco')    renderPomoUI();
+}
+
+function toggleNField(head) {
+  const body = head.nextElementSibling;
+  const open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  head.classList.toggle('open', !open);
+}
+
+function setarData() {
+  const d = new Date();
+  const opts = {weekday:'long', day:'2-digit', month:'long', year:'numeric'};
+  const dataEl = document.getElementById('tbar-date');
+  const clockEl = document.getElementById('tbar-clock');
+  if (dataEl) dataEl.textContent = d.toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'short'});
+  if (clockEl) clockEl.textContent = d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  const dd = document.getElementById('dash-daystr');
+  if (dd) dd.textContent = d.toLocaleDateString('pt-BR', opts);
+  const h = d.getHours();
+  const saud = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+  const dg = document.getElementById('dash-greeting');
+  if (dg) dg.textContent = saud + (S.nome ? ', ' + S.nome : '') + '!';
+  const ds = document.getElementById('dash-sub');
+  if (ds) ds.textContent = h < 12 ? 'Que tal começar com uma nota?' : h < 18 ? 'Hora de estudar com foco.' : 'Revise antes de dormir.';
+}
+
+function atualizarStats() {
+  const el = (id, v) => { const e = document.getElementById(id); if(e) e.textContent = v; };
+  el('s-notas', S.notas.length);
+  el('s-cards', S.flashcards.length);
+  el('s-xp', S.xp || 0);
+  // streak
+  const sd = document.getElementById('streak-dots');
+  if (sd && S.streakDias) {
+    sd.innerHTML = S.streakDias.map((ok,i) =>
+      `<div class="sdot${ok?' done':''}${i===6?' today':''}"></div>`
+    ).join('');
+  }
+  // revisoes
+  const agora = Date.now();
+  const paraRevisar = S.flashcards.filter(c => c.proximaRevisao <= agora).slice(0,4);
+  const rl = document.getElementById('dash-revisoes');
+  if (rl) {
+    if (!paraRevisar.length) {
+      rl.innerHTML = '<div class="empty-msg">✨ Nenhum card para revisar agora!</div>';
+    } else {
+      rl.innerHTML = paraRevisar.map(c => `
+        <div class="p-item" onclick="navTo('cards');iniciarEstudo()" style="cursor:pointer">
+          <div class="p-dot" style="background:var(--yellow);border-color:var(--yellow)"></div>
+          <div class="p-txt">
+            <div class="p-title">${escHtml(c.pergunta.substring(0,55))}${c.pergunta.length>55?'...':''}</div>
+            <div class="p-sub">Para revisão · ${c.cat}</div>
+          </div>
+          <span style="font-size:.7rem;color:var(--yellow);font-family:'Courier Prime',monospace;flex-shrink:0">→ Revisar</span>
+        </div>`).join('');
+    }
+  }
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+
+// ─────────────────────────────────────────────────────────
+// PATCH: GRAFO DE PEIRCE DIDÁTICO + TEMA + LEMBRETES
+// ─────────────────────────────────────────────────────────
+const PEIRCE = {alfa:{titulo:'Alfa · afirmação e negação',texto:'Pense no Alfa como o nível do sim e do não. Uma ideia fora do corte está afirmada; dentro do corte, ela é negada.',exemplo:'“Próprio” dentro do círculo vira “não próprio”.',diagrama:'<div class="cut">NÃO<br><strong>próprio</strong></div>'},beta:{titulo:'Beta · sujeitos, relações e conexões',texto:'O Beta mostra quem se liga a quem: sujeito, característica, causa, consequência e exemplo.',exemplo:'“aluna — estuda — argumento”: as ideias ficam conectadas.',diagrama:'<span>aluna</span><div class="identity-line"></div><span style="margin-left:72%">argumento</span>'},gama:{titulo:'Gama · hipóteses, regras e possibilidades',texto:'O Gama serve para pensar cenários possíveis, regras e “e se...?”. Ele ajuda a testar uma ideia antes de acreditar nela.',exemplo:'“Se eu revisar todo dia, então lembro melhor?” vira hipótese verificável.',diagrama:'<div class="cut double">SE...<br>ENTÃO...</div>'}};
+function showPeirce(nivel){const box=document.getElementById('peirce-dashboard');if(!box)return;document.querySelectorAll('.peirce-tab').forEach(b=>b.classList.remove('on'));const btn=document.getElementById('pt-'+nivel);if(btn)btn.classList.add('on');const p=PEIRCE[nivel]||PEIRCE.alfa;box.innerHTML=`<div class="peirce-card"><strong class="mono">${p.titulo}</strong><p style="font-size:.82rem;margin-top:.35rem;color:var(--ink2)">${p.texto}</p><div class="peirce-diagram">${p.diagrama}</div><p style="font-size:.78rem;color:var(--ink3)">💡 ${p.exemplo}</p></div>`}
+function aplicarTema(){document.body.classList.toggle('dark',!!(S.config&&S.config.darkMode)); aplicarAcessibilidade()}
+function aplicarAcessibilidade(){
+  document.body.classList.remove('font-large','font-xlarge');
+  const fs = (S.config && S.config.fontSize) || 'normal';
+  if (fs === 'large') document.body.classList.add('font-large');
+  if (fs === 'xlarge') document.body.classList.add('font-xlarge');
+}
+function setFontSizeBRIO(size){
+  S.config.fontSize = size; salvarEstado(); aplicarAcessibilidade(); renderPerfil();
+  toast(size==='normal'?'Letra normal':size==='large'?'Letra maior ativada':'Letra extra grande ativada');
+}
+let lembreteTimer=null;function agendarLembreteRevisao(){clearTimeout(lembreteTimer);if(!S.config||!S.config.lembretes)return;const agora=new Date(),alvo=new Date();alvo.setHours(20,0,0,0);if(alvo<=agora)alvo.setDate(alvo.getDate()+1);lembreteTimer=setTimeout(()=>{toast('⏰ Hora da revisão diária no BRIO!');if('Notification'in window&&Notification.permission==='granted')new Notification('BRIO',{body:'Hora da revisão diária.'});agendarLembreteRevisao()},alvo-agora)}
+function configurarPreviewArquivoPost(){const input=document.getElementById('post-arquivo'),status=document.getElementById('post-arquivo-status');if(!input||input._brioReady)return;input._brioReady=true;input.addEventListener('change',()=>{status.textContent=input.files[0]?'Selecionado: '+input.files[0].name:'Nenhum arquivo selecionado.'})}
+function extrairLinks(texto){return[...String(texto||'').matchAll(/https?:\/\/[^\s<]+/gi)].map(m=>m[0])}
+function arquivoPostComoPromise(){const input=document.getElementById('post-arquivo');const f=input&&input.files&&input.files[0];if(!f)return Promise.resolve(null);return new Promise(resolve=>{const r=new FileReader();r.onload=e=>resolve({nome:f.name,tipo:f.type||'arquivo',data:e.target.result,isImage:(f.type||'').startsWith('image/')});r.onerror=()=>resolve({nome:f.name,tipo:f.type||'arquivo',data:'',isImage:false});r.readAsDataURL(f)})}
+
+// ─────────────────────────────────────────────────────────
+// 2. ONBOARDING
+// ─────────────────────────────────────────────────────────
+let obPasso = 0;
+function obNext() {
+  const passos = document.querySelectorAll('.ob-step');
+  const dots   = document.querySelectorAll('.ob-dot');
+  passos[obPasso].classList.remove('on');
+  dots[obPasso].classList.remove('on');
+  obPasso = Math.min(obPasso + 1, passos.length - 1);
+  passos[obPasso].classList.add('on');
+  dots[obPasso].classList.add('on');
+}
+function obFinish() {
+  const nome = document.getElementById('ob-name').value.trim() || 'Estudante';
+  S.nome = nome;
+  S.onboarded = true;
+  salvarEstado();
+  document.getElementById('ob-screen').classList.add('hidden');
+  iniciarApp();
+}
+if (S.onboarded) {
+  document.getElementById('ob-screen').classList.add('hidden');
+}
+
+// ─────────────────────────────────────────────────────────
+// 3. INICIALIZAÇÃO DO APP
+// ─────────────────────────────────────────────────────────
+function iniciarApp() {
+  aplicarTema();
+  setarData();
+  atualizarStats();
+  renderPARA();
+  renderNotas();
+  renderFlashcards();
+  renderFeed();
+  renderGrafo();
+  renderIgnorancias();
+  renderPerfil();
+  renderPomoUI();
+  showPeirce('alfa');
+  configurarPreviewArquivoPost();
+  agendarLembreteRevisao();
+  // atualizar relógio a cada segundo
+  setInterval(setarData, 1000);
+}
+BRIO_BOOT_INICIAL();
+
+// ─────────────────────────────────────────────────────────
+// 4. SISTEMA PARA
+// ─────────────────────────────────────────────────────────
+const PARA_CONFIG = {
+  projetos: {icon:'📌', label:'Projetos', cor:'var(--red)',   desc:'Com prazo e resultado definido'},
+  areas:    {icon:'🗂',  label:'Áreas',    cor:'var(--yellow)',desc:'Responsabilidades contínuas'},
+  recursos: {icon:'📚', label:'Recursos', cor:'var(--green2)',desc:'Referências e interesses'},
+  arquivo:  {icon:'🗃',  label:'Arquivo',  cor:'var(--ink3)', desc:'Material inativo ou concluído'}
+};
+
+function renderPARA() {
+  const cont = document.getElementById('para-lista');
+  if (!cont) return;
+  cont.innerHTML = Object.entries(PARA_CONFIG).map(([k, cfg]) => {
+    const items = S.pkm[k] || [];
+    return `
+      <div class="folder" id="folder-${k}">
+        <div class="folder-head" onclick="toggleFolder('${k}')">
+          <span class="fh-icon">${cfg.icon}</span>
+          <span class="fh-label" style="color:${cfg.cor}">${cfg.label}</span>
+          <span style="font-size:.72rem;color:var(--ink3);margin-right:.25rem">${cfg.desc}</span>
+          <span class="fh-count">${items.length}</span>
+          <span class="fh-arrow" id="arrow-${k}">▶</span>
+        </div>
+        <div class="folder-body" id="body-${k}">
+          <button class="btn btn-sm btn-g btn-full" style="margin-bottom:.5rem" onclick="abrirAddPKMPasta('${k}','${cfg.label}')">
+            + Adicionar em ${cfg.label}
+          </button>
+          ${items.length ? items.map(it => `
+            <div class="p-item" id="pitem-${it.id}">
+              <div class="p-dot" style="background:${cfg.cor};border-color:${cfg.cor}"></div>
+              <div class="p-txt">
+                <div class="p-title">${escHtml(it.titulo)}</div>
+                ${it.desc ? `<div class="p-sub">${escHtml(it.desc)}</div>` : ''}
+              </div>
+              <button class="p-del" onclick="deletarItemPKM('${k}',${it.id},event)">✕</button>
+            </div>`).join('') :
+            `<div class="empty-msg">Nenhum item ainda</div>`}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleFolder(k) {
+  const body  = document.getElementById('body-' + k);
+  const arrow = document.getElementById('arrow-' + k);
+  const open  = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  if (arrow) arrow.classList.toggle('open', !open);
+}
+
+function abrirAddPKM() {
+  document.getElementById('pkm-modal-titulo').textContent = '+ Novo item';
+  document.getElementById('pkm-pasta-alvo').value = 'recursos';
+  document.getElementById('pkm-titulo').value = '';
+  document.getElementById('pkm-desc').value = '';
+  openModal('modal-pkm-add');
+}
+function abrirAddPKMPasta(pasta, label) {
+  document.getElementById('pkm-modal-titulo').textContent = `+ Adicionar em ${label}`;
+  document.getElementById('pkm-pasta-alvo').value = pasta;
+  document.getElementById('pkm-titulo').value = '';
+  document.getElementById('pkm-desc').value = '';
+  openModal('modal-pkm-add');
+}
+function salvarItemPKM() {
+  const titulo = document.getElementById('pkm-titulo').value.trim();
+  if (!titulo) { toast('❌ Digite um título!'); return; }
+  const pasta = document.getElementById('pkm-pasta-alvo').value;
+  const item = { id: ++S.nextId, titulo, desc: document.getElementById('pkm-desc').value.trim() };
+  S.pkm[pasta].push(item);
+  xpGanhar(5);
+  salvarEstado();
+  renderPARA();
+  closeModal('modal-pkm-add');
+  toast('✅ Item adicionado ao ' + PARA_CONFIG[pasta].label + '!');
+}
+function deletarItemPKM(pasta, id, e) {
+  e.stopPropagation();
+  S.pkm[pasta] = S.pkm[pasta].filter(x => x.id !== id);
+  salvarEstado();
+  renderPARA();
+  toast('Item removido');
+}
+
+// ─────────────────────────────────────────────────────────
+// 5. NOTAS
+// ─────────────────────────────────────────────────────────
+let conexoesPendentes = [];
+let notaAtualId = null;
+
+function addConexao() {
+  const v = document.getElementById('nn-conn-input').value.trim();
+  if (!v) return;
+  if (!conexoesPendentes.includes(v)) conexoesPendentes.push(v);
+  document.getElementById('nn-conn-input').value = '';
+  renderConexoesPendentes();
+}
+function renderConexoesPendentes() {
+  const c = document.getElementById('nn-conn-lista');
+  if (!c) return;
+  c.innerHTML = conexoesPendentes.map((cn, i) =>
+    `<div class="conn-pill" onclick="removerConn(${i})">🔗 ${escHtml(cn)} ✕</div>`
+  ).join('');
+}
+function removerConn(i) {
+  conexoesPendentes.splice(i, 1);
+  renderConexoesPendentes();
+}
+
+function salvarNotaRapida() {
+  const titulo  = document.getElementById('nr-titulo').value.trim();
+  const conteudo = document.getElementById('nr-corpo').value.trim();
+  const pasta   = document.getElementById('nr-pasta').value;
+  if (!titulo && !conteudo) { toast('❌ Escreva algo antes de salvar!'); return; }
+  const nota = {
+    id: gerarId('n'),
+    titulo: titulo || 'Nota rápida',
+    conteudo, pasta,
+    data: new Date().toLocaleDateString('pt-BR'),
+    interp:'', contexto:'', limite:'', contra:'', emocao:'',
+    conexoes: []
+  };
+  S.notas.unshift(nota);
+  xpGanhar(10);
+  salvarEstado();
+  renderNotas();
+  atualizarStats();
+  closeModal('modal-nota-rapida');
+  document.getElementById('nr-titulo').value = '';
+  document.getElementById('nr-corpo').value  = '';
+  toast('✅ Nota salva! +10 XP ✍️');
+}
+
+function salvarNotaProfunda() {
+  const titulo = document.getElementById('nn-titulo').value.trim();
+  if (!titulo) { toast('❌ Dê um título à nota!'); return; }
+  const nota = {
+    id: gerarId('n'),
+    titulo,
+    conteudo:  document.getElementById('nn-conteudo').value.trim(),
+    interp:    document.getElementById('nn-interp').value.trim(),
+    contexto:  document.getElementById('nn-contexto').value.trim(),
+    limite:    document.getElementById('nn-limite').value.trim(),
+    contra:    document.getElementById('nn-contra').value.trim(),
+    emocao:    document.getElementById('nn-emocao').value.trim(),
+    conexoes:  [...conexoesPendentes],
+    pasta:     document.getElementById('nn-pasta').value,
+    data:      new Date().toLocaleDateString('pt-BR')
+  };
+  S.notas.unshift(nota);
+  xpGanhar(20);
+
+  // auto flashcard
+  if (document.getElementById('opt-fc-auto')?.checked && nota.conteudo) {
+    const fcs = gerarFlashcardsLocalDaNota(nota);
+    fcs.forEach(f => S.flashcards.push(f));
+    if (fcs.length) toast(`🃏 ${fcs.length} flashcard(s) gerado(s) automaticamente!`, 3000);
+  }
+  // auto grafo
+  if (document.getElementById('opt-grafo-auto')?.checked) {
+    S.grafo.nos.push({
+      id: gerarId('g'),
+      label: nota.titulo.substring(0, 22),
+      x: 20 + Math.random() * 60,
+      y: 20 + Math.random() * 60
+    });
+  }
+
+  salvarEstado();
+  renderNotas();
+  renderFlashcards();
+  atualizarStats();
+  closeModal('modal-nota-nova');
+  // limpar campos
+  ['nn-titulo','nn-conteudo','nn-interp','nn-contexto','nn-limite','nn-contra','nn-emocao'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  conexoesPendentes = [];
+  renderConexoesPendentes();
+  toast('✅ Nota profunda salva! +20 XP 🧠');
+}
+
+// Gera flashcards localmente a partir da nota (sem IA externa)
+function gerarFlashcardsLocalDaNota(nota) {
+  const cards = [];
+  if (nota.conteudo && nota.conteudo.length > 20) {
+    cards.push({
+      id: gerarId('fc'),
+      pergunta: `O que você sabe sobre: "${nota.titulo}"?`,
+      resposta: nota.conteudo.substring(0, 300),
+      cat: nota.pasta === 'recursos' ? 'estudo' : 'geral',
+      facilidade: 0, proximaRevisao: 0, revisoes: 0
+    });
+  }
+  if (nota.limite) {
+    cards.push({
+      id: gerarId('fc'),
+      pergunta: `Qual a limitação principal da ideia "${nota.titulo}"?`,
+      resposta: nota.limite,
+      cat: 'estudo', facilidade: 0, proximaRevisao: 0, revisoes: 0
+    });
+  }
+  if (nota.contra) {
+    cards.push({
+      id: gerarId('fc'),
+      pergunta: `Dê um contraexemplo para "${nota.titulo}":`,
+      resposta: nota.contra,
+      cat: 'estudo', facilidade: 0, proximaRevisao: 0, revisoes: 0
+    });
+  }
+  return cards.slice(0, 3);
+}
+
+function renderNotas() {
+  const cont = document.getElementById('notas-lista');
+  if (!cont) return;
+  if (!S.notas.length) {
+    cont.innerHTML = '<div class="empty-msg">Nenhuma nota ainda.<br>Crie sua primeira!</div>';
+    return;
+  }
+  cont.innerHTML = S.notas.map(n => {
+    const tags = [];
+    if (n.emocao)   tags.push('<span class="tag tag-y">💛 emoção</span>');
+    if (n.conexoes?.length) tags.push(`<span class="tag tag-b">🔗 ${n.conexoes.length}</span>`);
+    if (n.limite)   tags.push('<span class="tag tag-r">⚠️ limite</span>');
+    return `
+      <div class="note-card" onclick="verNota('${n.id}')">
+        <div class="note-head">
+          <div style="flex:1">
+            <div class="note-title">${escHtml(n.titulo)}</div>
+            <div class="note-meta">${n.data} · ${PARA_CONFIG[n.pasta]?.label || n.pasta}</div>
+          </div>
+        </div>
+        ${n.conteudo ? `<div class="note-preview">${escHtml(n.conteudo)}</div>` : ''}
+        ${tags.length ? `<div class="note-tags">${tags.join('')}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function verNota(id) {
+  const n = S.notas.find(x => x.id === id);
+  if (!n) return;
+  notaAtualId = id;
+  document.getElementById('vn-titulo').textContent = n.titulo;
+  const campos = [
+    ['📖 Conteúdo', n.conteudo],
+    ['🔍 Interpretação', n.interp],
+    ['🌍 Contexto', n.contexto],
+    ['⚠️ Limitações', n.limite],
+    ['❌ Contraexemplo', n.contra],
+    ['💛 Emoção', n.emocao]
+  ].filter(([, v]) => v);
+  document.getElementById('vn-corpo').innerHTML = `
+    <p class="mono" style="font-size:.68rem;color:var(--ink3);margin-bottom:.85rem">${n.data} · ${PARA_CONFIG[n.pasta]?.label || n.pasta}</p>
+    ${campos.map(([l, v]) => `
+      <div style="margin-bottom:.85rem">
+        <div class="mono" style="font-size:.68rem;font-weight:700;color:var(--ink2);margin-bottom:.25rem;text-transform:uppercase;letter-spacing:.06em">${l}</div>
+        <div style="font-size:.87rem;line-height:1.65;color:var(--ink2)">${escHtml(v)}</div>
+      </div>`).join('')}
+    ${n.conexoes?.length ? `
+      <div style="margin-top:.75rem">
+        <div class="mono" style="font-size:.68rem;font-weight:700;color:var(--ink2);margin-bottom:.35rem">🔗 CONEXÕES</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.25rem">${n.conexoes.map(c => `<div class="conn-pill">${escHtml(c)}</div>`).join('')}</div>
+      </div>` : ''}`;
+  openModal('modal-ver-nota');
+}
+
+function deletarNotaAtual() {
+  if (!notaAtualId) return;
+  if (!confirm('Excluir esta nota?')) return;
+  S.notas = S.notas.filter(n => n.id !== notaAtualId);
+  salvarEstado();
+  renderNotas();
+  atualizarStats();
+  closeModal('modal-ver-nota');
+  toast('Nota excluída');
+}
+
+function gerarFlashcardDaNota() {
+  const n = S.notas.find(x => x.id === notaAtualId);
+  if (!n) return;
+  const fcs = gerarFlashcardsLocalDaNota(n);
+  if (!fcs.length) { toast('❌ Nota sem conteúdo suficiente para gerar flashcards'); return; }
+  fcs.forEach(f => S.flashcards.push(f));
+  xpGanhar(5);
+  salvarEstado();
+  renderFlashcards();
+  atualizarStats();
+  closeModal('modal-ver-nota');
+  toast(`🃏 ${fcs.length} flashcard(s) gerado(s)! +5 XP`);
+}
+
+// ─────────────────────────────────────────────────────────
+// 6. FLASHCARDS + REPETIÇÃO ESPAÇADA
+// ─────────────────────────────────────────────────────────
+let filaEstudo = [];
+let cardAtual  = null;
+let cardVirado = false;
+
+// Intervalos em dias por facilidade: 0=difícil, 1=ok, 2=fácil
+const INTERVALOS = [1, 3, 7];
+
+function iniciarEstudo() {
+  const agora = Date.now();
+  filaEstudo = S.flashcards.filter(c => c.proximaRevisao <= agora);
+  if (!filaEstudo.length) {
+    filaEstudo = [...S.flashcards].slice(0, Math.min(5, S.flashcards.length));
+  }
+  cardVirado = false;
+  renderCardAtual();
+}
+
+function renderFlashcards() {
+  // Área de estudo
+  const area = document.getElementById('fc-estudo');
+  if (!area) return;
+  const agora = Date.now();
+  const paraRevisar = S.flashcards.filter(c => c.proximaRevisao <= agora);
+  if (!S.flashcards.length) {
+    area.innerHTML = '<div class="empty-msg">Crie seu primeiro flashcard!</div>';
+  } else if (!filaEstudo.length && !cardAtual) {
+    area.innerHTML = `
+      <div class="empty-msg" style="margin-bottom:.75rem">
+        ✨ ${paraRevisar.length} card(s) para revisar agora
+      </div>
+      <button class="btn btn-b btn-full btn-lg" onclick="iniciarEstudo()">▶ Iniciar revisão</button>`;
+  }
+  // Lista de todos os cards
+  const lista = document.getElementById('fc-lista');
+  if (!lista) return;
+  if (!S.flashcards.length) { lista.innerHTML = ''; return; }
+  lista.innerHTML = S.flashcards.map(c => `
+    <div class="fc-mini">
+      <div class="p-dot" style="background:var(--yellow);border-color:var(--yellow);flex-shrink:0;margin-top:0"></div>
+      <div class="fc-mini-q">${escHtml(c.pergunta)}</div>
+      <span class="tag">${c.cat}</span>
+      <button class="p-del" style="opacity:1" onclick="deletarCard('${c.id}',event)">✕</button>
+    </div>`).join('');
+}
+
+function renderCardAtual() {
+  const area = document.getElementById('fc-estudo');
+  if (!area) return;
+  if (!filaEstudo.length) {
+    area.innerHTML = `
+      <div class="alert alert-g" style="text-align:center;padding:1.25rem">
+        🎉 Revisão completa! Muito bem!
+      </div>
+      <button class="btn btn-b btn-full" onclick="iniciarEstudo()">▶ Estudar todos</button>`;
+    cardAtual = null;
+    return;
+  }
+  cardAtual  = filaEstudo[0];
+  cardVirado = false;
+  const total = S.flashcards.length;
+  const prog  = total - filaEstudo.length + 1;
+  area.innerHTML = `
+    <div class="mono" style="font-size:.65rem;color:var(--ink3);text-align:center;margin-bottom:.4rem">${prog}/${total} · ${cardAtual.cat}</div>
+    <div class="fc-stage">
+      <div class="fc-card" id="fc-ativo" onclick="virarCard()">
+        <div class="fc-face" id="fc-frente">
+          <div class="fc-side-label">Pergunta</div>
+          <div class="fc-text">${escHtml(cardAtual.pergunta)}</div>
+          <div class="fc-hint">toque para revelar a resposta</div>
+        </div>
+        <div class="fc-face fc-back" id="fc-verso">
+          <div class="fc-side-label">Resposta</div>
+          <div class="fc-text" style="font-size:.95rem">${escHtml(cardAtual.resposta)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="rate-row" id="rate-area" style="display:none">
+      <div class="rate-btn hard" onclick="avaliarCard(0)">😰<br>Difícil<br><span style="font-size:.62rem">+1 dia</span></div>
+      <div class="rate-btn ok"   onclick="avaliarCard(1)">🤔<br>Ok<br><span style="font-size:.62rem">+3 dias</span></div>
+      <div class="rate-btn easy" onclick="avaliarCard(2)">😊<br>Fácil<br><span style="font-size:.62rem">+7 dias</span></div>
+    </div>`;
+}
+
+function virarCard() {
+  if (!cardAtual) return;
+  cardVirado = !cardVirado;
+  const el = document.getElementById('fc-ativo');
+  if (el) el.classList.toggle('flipped', cardVirado);
+  const ra = document.getElementById('rate-area');
+  if (ra) ra.style.display = cardVirado ? 'grid' : 'none';
+}
+
+function avaliarCard(facilidade) {
+  if (!cardAtual) return;
+  const c = S.flashcards.find(x => x.id === cardAtual.id);
+  if (c) {
+    c.facilidade   = facilidade;
+    c.revisoes     = (c.revisoes || 0) + 1;
+    c.proximaRevisao = Date.now() + INTERVALOS[facilidade] * 86400000;
+  }
+  filaEstudo.shift();
+  xpGanhar(3);
+  salvarEstado();
+  renderCardAtual();
+  renderFlashcards();
+}
+
+function salvarFlashcard() {
+  const p = document.getElementById('fc-pergunta').value.trim();
+  const r = document.getElementById('fc-resposta').value.trim();
+  if (!p || !r) { toast('❌ Preencha pergunta e resposta!'); return; }
+  S.flashcards.push({
+    id: gerarId('fc'),
+    pergunta: p, resposta: r,
+    cat: document.getElementById('fc-cat').value,
+    facilidade: 0, proximaRevisao: 0, revisoes: 0
+  });
+  xpGanhar(5);
+  salvarEstado();
+  renderFlashcards();
+  atualizarStats();
+  closeModal('modal-fc-novo');
+  document.getElementById('fc-pergunta').value = '';
+  document.getElementById('fc-resposta').value = '';
+  toast('🃏 Flashcard criado! +5 XP');
+}
+
+function deletarCard(id, e) {
+  e.stopPropagation();
+  S.flashcards = S.flashcards.filter(c => c.id !== id);
+  salvarEstado();
+  renderFlashcards();
+  atualizarStats();
+  toast('Card removido');
+}
+
+// ─────────────────────────────────────────────────────────
+// 7. GRAFO COGNITIVO
+// ─────────────────────────────────────────────────────────
+let grafoMode    = 'add';
+let noSelecionado = null;
+let arrastandoNo  = null;
+let dragOffset    = {x:0, y:0};
+
+function renderGrafo() {
+  const canvas = document.getElementById('grafo-canvas');
+  if (!canvas) return;
+  const W = canvas.offsetWidth  || 320;
+  const H = canvas.offsetHeight || 310;
+
+  // Limpar canvas
+  canvas.innerHTML = '';
+
+  // SVG de arestas
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.classList.add('gsvg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  S.grafo.arestas.forEach(([a, b]) => {
+    const na = S.grafo.nos.find(n => n.id === a);
+    const nb = S.grafo.nos.find(n => n.id === b);
+    if (!na || !nb) return;
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', (na.x / 100) * W);
+    line.setAttribute('y1', (na.y / 100) * H);
+    line.setAttribute('x2', (nb.x / 100) * W);
+    line.setAttribute('y2', (nb.y / 100) * H);
+    line.setAttribute('stroke', '#C8B89A');
+    line.setAttribute('stroke-width', '2');
+    line.setAttribute('stroke-dasharray', '5,4');
+    svg.appendChild(line);
+  });
+  canvas.appendChild(svg);
+
+  // Nós
+  S.grafo.nos.forEach(no => {
+    const div = document.createElement('div');
+    const kind = no.kind || 'beta';
+    div.className = 'gnode ' + kind +
+      (no.id === noSelecionado ? ' sel' : '') +
+      (no.id === S.grafo.nos[0]?.id ? ' hub' : '');
+    const kindIcon = kind === 'alfa' ? '⊖' : kind === 'gama' ? '◇' : '↔';
+    div.innerHTML = `<span class="gkind">${kindIcon}</span>${escHtml(no.label)}`;
+    div.style.left  = no.x + '%';
+    div.style.top   = no.y + '%';
+    div.dataset.id  = no.id;
+    div.addEventListener('pointerdown', iniciarArrastar);
+    div.addEventListener('click', clicarNo);
+    canvas.appendChild(div);
+  });
+
+  // Relações
+  const rl = document.getElementById('grafo-relacoes');
+  if (rl) {
+    if (!S.grafo.arestas.length) {
+      rl.textContent = 'Nenhuma relação ainda. Adicione nós e conecte-os.';
+    } else {
+      rl.innerHTML = S.grafo.arestas.map(([a, b]) => {
+        const na = S.grafo.nos.find(n => n.id === a)?.label || a;
+        const nb = S.grafo.nos.find(n => n.id === b)?.label || b;
+        return `<div>• ${escHtml(na)} ↔ ${escHtml(nb)} <span style="color:var(--ink3)">(relação Beta)</span></div>`;
+      }).join('');
+    }
+  }
+}
+
+function clicarNo(e) {
+  const id = e.currentTarget.dataset.id;
+  if (grafoMode === 'connect') {
+    if (!noSelecionado) {
+      noSelecionado = id;
+      toast('Agora clique no 2º nó para conectar');
+      renderGrafo();
+      return;
+    }
+    if (noSelecionado !== id) {
+      const existe = S.grafo.arestas.some(
+        ([a, b]) => (a === id && b === noSelecionado) || (a === noSelecionado && b === id)
+      );
+      if (!existe) S.grafo.arestas.push([noSelecionado, id]);
+      noSelecionado = null;
+      grafoMode = 'add';
+      document.getElementById('btn-conectar').classList.remove('btn-b');
+      salvarEstado();
+      renderGrafo();
+      toast('✅ Conexão criada!');
+    }
+  } else if (grafoMode === 'select') {
+    noSelecionado = id; grafoMode = 'add'; renderGrafo(); toast('Nó selecionado. Agora escolha Alfa, Beta, Gama ou Editar.');
+  } else if (grafoMode === 'delete') {
+    S.grafo.nos    = S.grafo.nos.filter(n => n.id !== id);
+    S.grafo.arestas = S.grafo.arestas.filter(([a, b]) => a !== id && b !== id);
+    grafoMode = 'add';
+    document.getElementById('btn-deletar').classList.remove('btn-r');
+    salvarEstado();
+    renderGrafo();
+    toast('Nó removido');
+  } else {
+    noSelecionado = (noSelecionado === id ? null : id);
+    renderGrafo();
+    if (noSelecionado) toast('Nó selecionado. Você pode editar, conectar ou marcar Alfa/Beta/Gama.');
+  }
+}
+
+function iniciarArrastar(e) {
+  if (grafoMode !== 'add') return;
+  arrastandoNo = e.currentTarget.dataset.id;
+  const canvas = document.getElementById('grafo-canvas');
+  const rect   = canvas.getBoundingClientRect();
+  const cl     = e.changedTouches ? e.changedTouches[0] : e;
+  const no     = S.grafo.nos.find(n => n.id === arrastandoNo);
+  if (!no) return;
+  dragOffset.x = (no.x / 100 * rect.width)  - (cl.clientX - rect.left);
+  dragOffset.y = (no.y / 100 * rect.height) - (cl.clientY - rect.top);
+  e.preventDefault();
+}
+
+document.addEventListener('pointermove', e => {
+  if (!arrastandoNo) return;
+  const canvas = document.getElementById('grafo-canvas');
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const cl   = e.changedTouches ? e.changedTouches[0] : e;
+  const no   = S.grafo.nos.find(n => n.id === arrastandoNo);
+  if (!no) return;
+  no.x = Math.max(4, Math.min(96, ((cl.clientX - rect.left + dragOffset.x) / rect.width)  * 100));
+  no.y = Math.max(4, Math.min(96, ((cl.clientY - rect.top  + dragOffset.y) / rect.height) * 100));
+  renderGrafo();
+});
+
+document.addEventListener('pointerup', () => {
+  if (arrastandoNo) { salvarEstado(); arrastandoNo = null; }
+});
+
+function addGrafoNode() {
+  const label = prompt('Nome do nó (conceito ou ideia):');
+  if (!label || !label.trim()) return;
+  S.grafo.nos.push({
+    id: gerarId('g'),
+    label: label.trim().substring(0, 28),
+    x: 25 + Math.random() * 50,
+    y: 20 + Math.random() * 60
+  });
+  salvarEstado();
+  renderGrafo();
+  toast('Nó adicionado!');
+}
+
+function toggleGrafoMode(modo) {
+  if (grafoMode === modo) {
+    grafoMode = 'add';
+    document.getElementById('btn-conectar').classList.remove('btn-b');
+    document.getElementById('btn-deletar').classList.remove('btn-r');
+    noSelecionado = null;
+    toast('Modo normal');
+  } else {
+    grafoMode = modo;
+    document.getElementById('btn-conectar').classList.toggle('btn-b', modo === 'connect');
+    document.getElementById('btn-deletar').classList.toggle('btn-r', modo === 'delete');
+    if (modo === 'connect') toast('Clique em um nó para iniciar conexão');
+    if (modo === 'delete')  toast('Clique em um nó para removê-lo');
+    noSelecionado = null;
+  }
+  renderGrafo();
+}
+
+
+function getNoSelecionadoOuPedir() {
+  if (noSelecionado && S.grafo.nos.some(n => n.id === noSelecionado)) return noSelecionado;
+  if (!S.grafo.nos.length) { toast('Crie um nó primeiro.'); return null; }
+  toast('Toque em um nó para selecioná-lo, depois escolha Alfa/Beta/Gama.');
+  grafoMode = 'select';
+  return null;
+}
+
+function setGrafoKind(kind) {
+  const id = getNoSelecionadoOuPedir();
+  if (!id) return;
+  const no = S.grafo.nos.find(n => n.id === id); if (!no) return;
+  no.kind = kind;
+  salvarEstado(); renderGrafo();
+  const msg = kind === 'alfa' ? 'Alfa: este nó agora representa negação, limite ou contraste.' : kind === 'beta' ? 'Beta: este nó entra como relação/conexão.' : 'Gama: este nó agora representa hipótese, regra ou possibilidade.';
+  toast(msg, 3200);
+}
+
+function editarGrafoNode() {
+  let id = noSelecionado;
+  if (!id || !S.grafo.nos.some(n => n.id === id)) {
+    toast('Toque em um nó para selecionar e depois clique em Editar.');
+    grafoMode = 'select';
+    return;
+  }
+  const no = S.grafo.nos.find(n => n.id === id); if (!no) return;
+  const novo = prompt('Editar nome do nó:', no.label);
+  if (!novo || !novo.trim()) return;
+  no.label = novo.trim().substring(0, 32);
+  salvarEstado(); renderGrafo(); toast('Nó editado.');
+}
+
+function criarExemploPeirce() {
+  S.grafo = {
+    nos: [
+      {id:'g_alfa_'+Date.now(), label:'não verificar fonte', x:24, y:35, kind:'alfa'},
+      {id:'g_beta_'+Date.now(), label:'argumento ↔ evidência', x:58, y:35, kind:'beta'},
+      {id:'g_gama_'+Date.now(), label:'se revisar, lembro melhor', x:48, y:70, kind:'gama'}
+    ],
+    arestas: []
+  };
+  S.grafo.arestas = [[S.grafo.nos[0].id, S.grafo.nos[1].id],[S.grafo.nos[1].id, S.grafo.nos[2].id]];
+  noSelecionado = null; grafoMode='add'; salvarEstado(); renderGrafo();
+  toast('Exemplo criado: Alfa limita, Beta conecta e Gama testa uma hipótese.', 3800);
+}
+
+function clearGrafo() {
+  if (!confirm('Limpar todos os nós e conexões do grafo?')) return;
+  S.grafo = { nos:[], arestas:[] };
+  salvarEstado();
+  renderGrafo();
+  toast('Grafo limpo');
+}
+
+// ─────────────────────────────────────────────────────────
+// 8. POMODORO
+// ─────────────────────────────────────────────────────────
+let pomoTimer = null;
+
+const FASES = {
+  foco:   { tempo: 25*60, cor: 'var(--blue)', label: 'FOCO' },
+  pausa:  { tempo:  5*60, cor: 'var(--green)', label: 'PAUSA CURTA' },
+  grande: { tempo: 15*60, cor: 'var(--green2)', label: 'PAUSA LONGA' }
+};
+
+function renderPomoUI() {
+  const fase = FASES[S.pomo.fase] || FASES.foco;
+  const r = S.pomo.restante;
+  const min = Math.floor(r / 60);
+  const sec = r % 60;
+  const disp = document.getElementById('pomo-display');
+  const fase_el = document.getElementById('pomo-fase');
+  if (disp) disp.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  if (fase_el) fase_el.textContent = fase.label;
+
+  // Arco SVG
+  const total  = fase.tempo;
+  const pct    = 1 - (r / total);
+  const circ   = Math.PI * 2 * 86; // r=86
+  const arco   = document.getElementById('pomo-arco');
+  if (arco) {
+    arco.style.strokeDashoffset = circ * (1 - pct);
+    arco.style.stroke = fase.cor;
+  }
+
+  const btn = document.getElementById('pomo-btn');
+  if (btn) btn.textContent = S.pomo.rodando ? '⏸ Pausar' : '▶ Iniciar';
+}
+
+function togglePomo() {
+  if (S.pomo.rodando) {
+    clearInterval(pomoTimer);
+    S.pomo.rodando = false;
+    salvarEstado();
+    renderPomoUI();
+  } else {
+    S.pomo.rodando = true;
+    pomoTimer = setInterval(() => {
+      S.pomo.restante--;
+      if (S.pomo.restante <= 0) {
+        clearInterval(pomoTimer);
+        S.pomo.rodando = false;
+        S.pomo.sessoes = (S.pomo.sessoes || 0) + 1;
+        const eraSess = S.pomo.fase === 'foco';
+        S.pomo.fase = eraSess
+          ? (S.pomo.sessoes % 4 === 0 ? 'grande' : 'pausa')
+          : 'foco';
+        S.pomo.restante = FASES[S.pomo.fase].tempo;
+        if (eraSess) { xpGanhar(15); toast('🎉 Sessão concluída! +15 XP'); }
+        else toast('✅ Pausa encerrada. Vamos lá!');
+        salvarEstado();
+      }
+      renderPomoUI();
+    }, 1000);
+    salvarEstado();
+    renderPomoUI();
+  }
+}
+
+function resetPomo() {
+  clearInterval(pomoTimer);
+  S.pomo = { ...S.pomo, rodando: false, fase: 'foco', restante: 25*60 };
+  salvarEstado();
+  renderPomoUI();
+  document.getElementById('pomo-btn').textContent = '▶ Iniciar';
+}
+
+function iniciarSemConsulta() {
+  const tema = document.getElementById('sem-consulta-tema').value.trim();
+  if (!tema) { toast('❌ Digite um tema para testar!'); return; }
+  document.getElementById('sc-desafio').innerHTML = `
+    <strong class="mono" style="font-size:.7rem;letter-spacing:.08em">DESAFIO:</strong><br>
+    Explique com suas palavras o que você sabe sobre <strong>"${escHtml(tema)}"</strong>.<br>
+    Não consulte notas nem internet.`;
+  document.getElementById('sc-resposta').value = '';
+  openModal('modal-sem-consulta');
+}
+
+function enviarSemConsulta() {
+  const r = document.getElementById('sc-resposta').value.trim();
+  if (!r) { toast('❌ Escreva sua resposta!'); return; }
+  // Salvar como nota de reflexão
+  S.notas.unshift({
+    id: gerarId('n'),
+    titulo: 'Sessão Mental — ' + new Date().toLocaleDateString('pt-BR'),
+    conteudo: r,
+    pasta: 'arquivo',
+    data: new Date().toLocaleDateString('pt-BR'),
+    interp: 'Resposta espontânea sem consulta', contexto:'', limite:'', contra:'', emocao:'',
+    conexoes: []
+  });
+  xpGanhar(10);
+  salvarEstado();
+  renderNotas();
+  atualizarStats();
+  closeModal('modal-sem-consulta');
+  toast('🧠 Resposta registrada como nota! +10 XP');
+}
+
+// ─────────────────────────────────────────────────────────
+// 9. FEED
+// ─────────────────────────────────────────────────────────
+async function publicarPost() {
+  const corpo = document.getElementById('post-corpo').value.trim();
+  const linkManual = document.getElementById('post-link').value.trim();
+  const arquivo = await arquivoPostComoPromise();
+  if (!corpo && !linkManual && !arquivo) { toast('❌ Escreva algo ou anexe um arquivo!'); return; }
+  if (S.config.limiteFeed) {
+    const hoje = new Date().toDateString();
+    if (S.dataPost !== hoje) { S.dataPost = hoje; S.postHoje = 0; }
+    if (S.postHoje >= 5) { toast('📵 Limite diário de 5 posts atingido!'); return; }
+    S.postHoje++;
+  }
+  const post = {
+    id: gerarId('p'), autor: S.nome || (S.nick ? '@' + S.nick : 'Você'), autorNick: S.nome || (S.nick ? '@' + S.nick : 'Você'), autorUid: BRIO_UID || 'local',
+    av: '🧠', tipo: document.getElementById('post-tipo').value, corpo, pergunta: document.getElementById('post-pergunta').value.trim(),
+    reacoes: {entendi:0, duvida:0, exemplo:0}, minhaReacao: null, tempo: 'agora',
+    links: [...new Set([linkManual, ...extrairLinks(corpo)].filter(Boolean))], arquivo, comentarios: [], createdAt: Date.now()
+  };
+  if (BRIO_ONLINE && BRIO_DB) {
+    await BRIO_DB.ref('posts/' + post.id).set({
+      autor: post.autor, autorNick: post.autorNick, autorUid: post.autorUid, av: post.av, tipo: post.tipo,
+      corpo: post.corpo, pergunta: post.pergunta, links: post.links, arquivo: post.arquivo,
+      createdAt: post.createdAt, reactionsByUser: {}, comments: {}
+    });
+  } else {
+    S.feed.unshift(post);
+  }
+  xpGanhar(8); salvarEstado(); renderFeed(); closeModal('modal-post-novo');
+  document.getElementById('post-corpo').value = ''; document.getElementById('post-pergunta').value = ''; document.getElementById('post-link').value = '';
+  const pf = document.getElementById('post-arquivo'); if (pf) pf.value = '';
+  const ps = document.getElementById('post-arquivo-status'); if (ps) ps.textContent = 'Nenhum arquivo selecionado.';
+  toast(BRIO_ONLINE ? '🌐 Post publicado no feed online! +8 XP' : '📰 Post publicado localmente! +8 XP');
+}
+
+async function reagirPost(id, tipo) {
+  const p = S.feed.find(x => x.id === id); if (!p) return;
+  if (BRIO_ONLINE && BRIO_DB && BRIO_UID) {
+    const atual = p.minhaReacao === tipo ? null : tipo;
+    await BRIO_DB.ref('posts/' + id + '/reactionsByUser/' + BRIO_UID).set(atual);
+    xpGanhar(2); return;
+  }
+  if (p.minhaReacao === tipo) { p.reacoes[tipo]--; p.minhaReacao = null; }
+  else { if (p.minhaReacao) p.reacoes[p.minhaReacao]--; p.reacoes[tipo]++; p.minhaReacao = tipo; xpGanhar(2); }
+  salvarEstado(); renderFeed();
+}
+
+function salvarPostComoNota(id) {
+  const p = S.feed.find(x => x.id === id);
+  if (!p) return;
+  S.notas.unshift({
+    id: gerarId('n'),
+    titulo: 'Do feed: ' + p.corpo.substring(0, 42) + (p.corpo.length > 42 ? '...' : ''),
+    conteudo: p.corpo,
+    pasta: 'recursos',
+    data: new Date().toLocaleDateString('pt-BR'),
+    interp:'', contexto:'', limite:'', contra:'', emocao:'',
+    conexoes: []
+  });
+  xpGanhar(5);
+  salvarEstado();
+  renderNotas();
+  atualizarStats();
+  toast('📝 Salvo como nota! +5 XP');
+}
+
+function gerarFCDoPost(id) {
+  const p = S.feed.find(x => x.id === id);
+  if (!p) return;
+  S.flashcards.push({
+    id: gerarId('fc'),
+    pergunta: p.pergunta || `O que você aprendeu com: "${p.corpo.substring(0,50)}"?`,
+    resposta: p.corpo,
+    cat: 'geral', facilidade: 0, proximaRevisao: 0, revisoes: 0
+  });
+  xpGanhar(5);
+  salvarEstado();
+  renderFlashcards();
+  atualizarStats();
+  toast('🃏 Flashcard criado! +5 XP');
+}
+
+const TIPO_LABEL = {reflexao:'💭 Reflexão', insight:'💡 Insight', resumo:'📖 Resumo', duvida:'❓ Dúvida'};
+
+function renderFeed() {
+  const cont = document.getElementById('feed-lista');
+  if (!cont) return;
+  if (!S.feed.length) { cont.innerHTML = '<div class="empty-msg">Nenhum post ainda.</div>'; return; }
+  cont.innerHTML = S.feed.map(p => {
+    p.comentarios = p.comentarios || [];
+    p.links = p.links || extrairLinks(p.corpo || '');
+    const comentarios = p.comentarios.slice(0,3).map(c => `<div class="comment-row"><strong>${escHtml(c.autor || 'Você')}:</strong> ${escHtml(c.texto)}</div>`).join('');
+    const limiteComentario = p.comentarios.length >= 3;
+    const midia = p.arquivo ? (p.arquivo.isImage ? `<div class="feed-media-grid"><img src="${p.arquivo.data}" alt="${escHtml(p.arquivo.nome)}"></div>` : `<div style="padding:0 .95rem"><span class="attachment-chip">📎 ${escHtml(p.arquivo.nome)}</span></div>`) : '';
+    const links = (p.links||[]).map(l => `<a class="feed-link" href="${escHtml(l)}" target="_blank" rel="noopener">🔗 ${escHtml(l)}</a>`).join('');
+    return `
+    <div class="feed-card">
+      <div class="feed-head"><div class="fav">${p.av || '🧠'}</div><div style="flex:1"><div class="feed-author">${escHtml(p.autor)}</div><div class="feed-time">${p.tempo} · ${TIPO_LABEL[p.tipo] || p.tipo} · OCMT: consumir com intenção</div></div></div>
+      <div class="feed-body">${escHtml(p.corpo || '')}</div>${links}${midia}${p.pergunta ? `<div class="feed-q">❓ ${escHtml(p.pergunta)}</div>` : ''}
+      <div class="feed-actions"><button class="react-btn${p.minhaReacao==='entendi'?' on':''}" onclick="reagirPost('${p.id}','entendi')">✅ Entendi (${p.reacoes.entendi})</button><button class="react-btn${p.minhaReacao==='duvida'?' on':''}" onclick="reagirPost('${p.id}','duvida')">🤔 Dúvida (${p.reacoes.duvida})</button><button class="react-btn${p.minhaReacao==='exemplo'?' on':''}" onclick="reagirPost('${p.id}','exemplo')">💡 Exemplo (${p.reacoes.exemplo})</button></div>
+      <div class="comment-box"><div class="mono" style="font-size:.66rem;color:var(--ink3)">Comentários ${p.comentarios.length}/3</div>${comentarios || '<div class="status-mini">Sem comentários ainda. Priorize comentário útil, não rolagem infinita.</div>'}<div class="comment-form"><input class="inp" id="coment-${p.id}" placeholder="Comentário curto e construtivo" ${limiteComentario?'disabled':''}><button class="btn btn-xs ${limiteComentario?'':'btn-g'}" onclick="comentarPost('${p.id}')" ${limiteComentario?'disabled':''}>Enviar</button></div></div>
+      <div class="feed-integrations"><button class="btn btn-xs btn-g" onclick="salvarPostComoNota('${p.id}')">📝 Nota</button><button class="btn btn-xs" onclick="gerarFCDoPost('${p.id}')">🃏 Flashcard</button></div>
+    </div>`}).join('');
+}
+async function comentarPost(id){
+  const p=S.feed.find(x=>x.id===id); if(!p)return;
+  p.comentarios=p.comentarios||[]; if(p.comentarios.length>=3){toast('💬 Limite de 3 comentários atingido.');return}
+  const inp=document.getElementById('coment-'+id); const texto=(inp?.value||'').trim(); if(!texto){toast('Escreva um comentário.');return}
+  const comentario = {autor:S.nome||'Você',autorNick:S.nome||'Você',autorUid:BRIO_UID||'local',texto:texto.substring(0,240),data:new Date().toLocaleDateString('pt-BR'),createdAt:Date.now()};
+  if(BRIO_ONLINE && BRIO_DB){ await BRIO_DB.ref('posts/'+id+'/comments').push(comentario); xpGanhar(2); toast('🌐 Comentário publicado.'); return; }
+  p.comentarios.push(comentario); xpGanhar(2);salvarEstado();renderFeed();toast('💬 Comentário adicionado.');
+}
+
+
+
+// ─────────────────────────────────────────────────────────
+// 10. ANÁLISE DE VIESES — IA LOCAL
+// ─────────────────────────────────────────────────────────
+
+// Padrões linguísticos para detecção de vieses
+const PADROES_VIES = [
+  {
+    nome: 'Linguagem Absoluta',
+    cor: 'var(--red)',
+    regex: /\b(sempre|nunca|jamais|todos|ninguém|todo mundo|nenhum|absolutamente|impossível|inevitável|com certeza|certamente|obviamente|evidentemente|necessariamente|definitivamente|sem dúvida|claro que|é óbvio)\b/gi,
+    explicacao: 'Usa termos que não admitem exceções, nuances ou contextos alternativos. Isso fragiliza a argumentação, pois realidades complexas raramente são absolutas.',
+    dica: 'Substitua por linguagem mais precisa: "frequentemente", "na maioria dos casos", "em geral".'
+  },
+  {
+    nome: 'Generalização Apressada',
+    cor: 'var(--yellow)',
+    regex: /\b(todo(s| o)? [a-záàâãéêíóôõúç]+ (são|é)|qualquer [a-záàâãéêíóôõúç]+ (é|são)|isso (sempre|nunca) acontece|típico de|eles (sempre|nunca|todos)|as pessoas (sempre|nunca))\b/gi,
+    explicacao: 'Aplica características de casos particulares a grupos inteiros, sem evidência suficiente.',
+    dica: 'Especifique o contexto: "alguns", "em determinadas situações", "segundo tal estudo..."'
+  },
+  {
+    nome: 'Apelo à Autoridade Vaga',
+    cor: 'var(--yellow)',
+    regex: /\b(especialistas (dizem|afirmam|concordam)|estudos (provam|mostram|confirmam|comprovam)|pesquisas (indicam|revelam)|a ciência (diz|afirma|prova)|está (comprovado|provado)|já foi (demonstrado|comprovado)|todos os especialistas)\b/gi,
+    explicacao: 'Apela a autoridades sem nomeá-las. "Estudos mostram" sem citar qual estudo é um argumento fraco.',
+    dica: 'Cite a fonte específica: autor, ano, publicação. Ex: "Segundo Hutchins (1995)..."'
+  },
+  {
+    nome: 'Linguagem Emocional',
+    cor: 'var(--red)',
+    regex: /\b(ridículo|absurdo|inacreditável|escandaloso|vergonhoso|horrível|terrível|maravilhoso|perfeito|incrível|ótimo demais|péssimo|odioso|revoltante|irritante|estúpido|idiota|burro|ignorante|lamentável)\b/gi,
+    explicacao: 'Usa palavras que apelam à emoção em vez de argumentar com evidências e lógica. Isso dificulta o diálogo racional.',
+    dica: 'Descreva fatos e evidências. Em vez de "ridículo", explique por que o argumento não se sustenta logicamente.'
+  },
+  {
+    nome: 'Pensamento Dicotômico',
+    cor: 'var(--red)',
+    regex: /\b(ou (você|é|são|está)|se não é|quem não (é|está|concorda)|tudo ou nada|preto (e|no) branco|não tem meio termo|ou (comigo|favor)|a favor ou contra|certo ou errado)\b/gi,
+    explicacao: 'Apresenta o mundo em apenas dois polos opostos, ignorando a complexidade e as posições intermediárias.',
+    dica: 'Reconheça que há espectro de posições. Explore posições intermediárias e contextos variados.'
+  },
+  {
+    nome: 'Viés de Confirmação',
+    cor: 'var(--purple)',
+    regex: /\b(como eu (sempre) disse|já (sabia|dizia)|confirma (o que|minha)|prova que eu (estava|tinha)|é exatamente o que|isso mostra que eu|como esperado|como sempre|isso só confirma)\b/gi,
+    explicacao: 'Seleciona e interpreta informações de forma a confirmar crenças preexistentes, ignorando evidências contrárias.',
+    dica: 'Ativamente procure evidências que contradigam sua posição antes de concluir.'
+  },
+  {
+    nome: 'Falácia Ad Hominem',
+    cor: 'var(--red)',
+    regex: /\b(esse (tipo de pessoa|indivíduo)|eles (são assim|são todos)|quem (pensa assim|acredita nisso)|o problema com (eles|vocês)|pessoas como (elas|você|eles)|típico (de quem|desse tipo))\b/gi,
+    explicacao: 'Ataca características do grupo ou da pessoa em vez de refutar o argumento em si.',
+    dica: 'Foque no argumento, não em quem o defende. O argumento deve ser avaliado por seus méritos lógicos.'
+  }
+];
+
+// Verificar ausência de evidências
+function checarAusenciaEvidencia(texto) {
+  const temCitacao = /\b(\d{4}|segundo|afirma|pesquisa|estudo de|dados de|fonte:|conforme|de acordo com|apud)\b/i.test(texto);
+  const temEvidencia = /\b(por exemplo|como mostra|como ilustra|comparando|dados|porcentagem|%|número de|taxa de|resultado|experimento)\b/i.test(texto);
+  const palavrasTotal = texto.split(/\s+/).length;
+  if (palavrasTotal > 30 && !temCitacao && !temEvidencia) {
+    return {
+      nome: 'Ausência de Evidência',
+      cor: 'var(--blue2)',
+      trechos: [],
+      explicacao: 'O texto faz afirmações sem apresentar dados, exemplos concretos ou fontes verificáveis.',
+      dica: 'Adicione dados, exemplos específicos, citações de pesquisas ou referências a fontes confiáveis.'
+    };
+  }
+  return null;
+}
+
+function analisarVies() {
+  const input = document.getElementById('bias-input');
+  const btn = document.getElementById('btn-analisar');
+  const box = document.getElementById('bias-resultado');
+  const texto = (input?.value || '').trim();
+
+  if (!texto) { toast('❌ Cole um texto para analisar!'); return; }
+  if (texto.length < 15) { toast('❌ Texto muito curto para análise!'); return; }
+
+  const finalizarBotao = () => {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '🔬 Analisar com IA';
+    }
+  };
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '🔬 Analisando...';
+  }
+  if (box) {
+    box.innerHTML = `<div class="pulse">🤖 Analisando padrões linguísticos<div style="display:flex;gap:4px"><div class="pdot"></div><div class="pdot"></div><div class="pdot"></div></div></div>`;
+  }
+
+  setTimeout(() => {
+    try {
+      const encontrados = [];
+      const trechosDestacados = new Set();
+
+      PADROES_VIES.forEach(padrao => {
+        const regex = new RegExp(padrao.regex.source, padrao.regex.flags.includes('g') ? padrao.regex.flags : padrao.regex.flags + 'g');
+        const matches = [];
+        let match;
+        while ((match = regex.exec(texto)) !== null) {
+          matches.push(match);
+          if (match.index === regex.lastIndex) regex.lastIndex++;
+        }
+        if (matches.length > 0) {
+          const trechos = [...new Set(matches.map(m => m[0].toLowerCase()))].slice(0, 3);
+          encontrados.push({ ...padrao, trechos, ocorrencias: matches.length });
+          matches.forEach(m => trechosDestacados.add(m[0]));
+        }
+      });
+
+      const semEvidencia = checarAusenciaEvidencia(texto);
+      if (semEvidencia) encontrados.push({ ...semEvidencia, ocorrencias: 1 });
+
+      let score = 0;
+      encontrados.forEach(v => {
+        const peso = {
+          'Linguagem Absoluta':15,
+          'Generalização Apressada':18,
+          'Apelo à Autoridade Vaga':14,
+          'Linguagem Emocional':12,
+          'Pensamento Dicotômico':20,
+          'Viés de Confirmação':16,
+          'Falácia Ad Hominem':20,
+          'Ausência de Evidência':12
+        };
+        score += (peso[v.nome] || 10) * Math.min(v.ocorrencias || 1, 3);
+      });
+      score = Math.min(100, score);
+
+      let textoHL = escHtml(texto);
+      [...trechosDestacados]
+        .sort((a,b) => b.length - a.length)
+        .forEach(t => {
+          const re = new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+          textoHL = textoHL.replace(re, `<mark class="highlight">$&</mark>`);
+        });
+
+      const nivel = score < 25 ? 'Baixo' : score < 55 ? 'Moderado' : score < 80 ? 'Alto' : 'Muito Alto';
+      const cor   = score < 25 ? 'var(--green2)' : score < 55 ? 'var(--yellow)' : 'var(--red)';
+      const emoji = score < 25 ? '✅' : score < 55 ? '⚠️' : '🚨';
+
+      window._ultimaAnalise = { texto, encontrados, score };
+
+      if (box) {
+        box.innerHTML = `
+          <div class="bias-meter-row">
+            <div class="bias-score" style="color:${cor}">${score}%</div>
+            <div style="flex:1">
+              <div class="mono" style="font-size:.72rem;font-weight:700;color:${cor};margin-bottom:.3rem">${emoji} Viés ${nivel}</div>
+              <div class="bias-bar-bg"><div class="bias-bar" style="width:${score}%;background:${cor}"></div></div>
+              <div class="mono" style="font-size:.65rem;color:var(--ink3);margin-top:.2rem">${encontrados.length} tipo(s) de viés detectado(s)</div>
+            </div>
+          </div>
+
+          ${encontrados.length ? `
+            <div style="margin-bottom:.6rem">
+              <div class="sec-label" style="margin-bottom:.4rem">vieses encontrados</div>
+              ${encontrados.map(v => `
+                <div class="bias-card">
+                  <div class="bias-name" style="color:${v.cor}">⚠️ ${v.nome} ${(v.ocorrencias || 0) > 1 ? `<span class="tag tag-r">${v.ocorrencias}×</span>` : ''}</div>
+                  ${v.trechos?.length ? `<div class="bias-quote">"${v.trechos.join('" · "')}"</div>` : ''}
+                  <div class="bias-desc">${v.explicacao}</div>
+                  <div class="bias-tip">💡 ${v.dica}</div>
+                </div>`).join('')}
+            </div>` : `
+            <div class="alert alert-g">
+              ✅ <strong>Texto relativamente equilibrado!</strong> Nenhum padrão de viés linguístico significativo foi detectado. Isso não garante que o argumento esteja correto, mas indica linguagem mais neutra.
+            </div>`}
+
+          <div style="margin-bottom:.75rem">
+            <div class="sec-label" style="margin-bottom:.4rem">texto analisado</div>
+            <div style="font-size:.8rem;line-height:1.7;color:var(--ink2);background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);padding:.75rem">${textoHL}</div>
+          </div>
+
+          ${score >= 30 ? `
+            <div class="alert alert-b">
+              📌 <strong>Contraponto sugerido:</strong> Para fortalecer o argumento, procure fontes que discordem da sua posição e incorpore as objeções mais fortes.
+            </div>` : ''}
+
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem">
+            <button class="btn btn-sm btn-g" onclick="salvarAnaliseComoNota()">📝 Salvar como nota</button>
+            <button class="btn btn-sm" onclick="gerarFCDaAnalise()">🃏 Gerar flashcard</button>
+            <span class="ai-badge">🤖 IA local · ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span>
+          </div>`;
+      }
+
+      xpGanhar(10);
+    } catch (erro) {
+      console.error('Erro no detector de vieses:', erro);
+      if (box) {
+        box.innerHTML = `<div class="alert alert-r">⚠️ O detector encontrou um erro interno, mas já destravei o botão. Tente analisar novamente com um texto menor ou sem caracteres muito incomuns.</div>`;
+      }
+      toast('⚠️ Detector destravado. Tente novamente.');
+    } finally {
+      finalizarBotao();
+    }
+  }, 350);
+}
+
+function salvarAnaliseComoNota() {
+  const a = window._ultimaAnalise;
+  if (!a) { toast('Execute a análise primeiro!'); return; }
+  const resumoVieses = a.encontrados.map(v => `• ${v.nome}: ${v.explicacao}`).join('\n');
+  S.notas.unshift({
+    id: gerarId('n'),
+    titulo: 'Análise de Viés — ' + new Date().toLocaleDateString('pt-BR'),
+    conteudo: `Texto analisado: "${a.texto.substring(0,100)}..."\n\nScore: ${a.score}%`,
+    interp: resumoVieses || 'Nenhum viés significativo detectado',
+    contexto: '', limite: '', contra: '', emocao: '',
+    pasta: 'recursos',
+    data: new Date().toLocaleDateString('pt-BR'),
+    conexoes: ['Análise Crítica', 'Pensamento Crítico']
+  });
+  xpGanhar(5);
+  salvarEstado();
+  renderNotas();
+  atualizarStats();
+  toast('📝 Análise salva como nota! +5 XP');
+}
+
+function gerarFCDaAnalise() {
+  const a = window._ultimaAnalise;
+  if (!a) { toast('Execute a análise primeiro!'); return; }
+  if (a.encontrados.length) {
+    const v = a.encontrados[0];
+    S.flashcards.push({
+      id: gerarId('fc'),
+      pergunta: `O que é e como evitar "${v.nome}" em um argumento?`,
+      resposta: `${v.explicacao}\n\nComo evitar: ${v.dica}`,
+      cat: 'estudo', facilidade: 0, proximaRevisao: 0, revisoes: 0
+    });
+  } else {
+    S.flashcards.push({
+      id: gerarId('fc'),
+      pergunta: 'Quais são os 5 principais tipos de viés linguístico em argumentos?',
+      resposta: 'Linguagem Absoluta, Generalização Apressada, Apelo à Autoridade Vaga, Linguagem Emocional, Pensamento Dicotômico.',
+      cat: 'estudo', facilidade: 0, proximaRevisao: 0, revisoes: 0
+    });
+  }
+  xpGanhar(5);
+  salvarEstado();
+  renderFlashcards();
+  atualizarStats();
+  toast('🃏 Flashcard criado! +5 XP');
+}
+
+// ─────────────────────────────────────────────────────────
+// 11. VERIFICADOR DE ARGUMENTO (EPVT)
+// ─────────────────────────────────────────────────────────
+function verificarArgumento() {
+  const tese   = document.getElementById('epvt-tese').value.trim();
+  const arg    = document.getElementById('epvt-arg').value.trim();
+  const contra = document.getElementById('epvt-contra').value.trim();
+
+  if (!tese && !arg) { toast('❌ Preencha pelo menos a tese ou o argumento!'); return; }
+
+  const btn = document.getElementById('btn-epvt');
+  const box = document.getElementById('epvt-resultado');
+  btn.disabled = true;
+
+  // Critérios de verificação
+  const criterios = [
+    { q: 'A tese está claramente formulada?',
+      ok: tese.length > 8,
+      dica: 'Uma boa tese é objetiva e verificável em 1-2 frases.' },
+    { q: 'O argumento foi desenvolvido com detalhes?',
+      ok: arg.length > 30,
+      dica: 'Argumento curto demais pode ser superficial. Desenvolva com exemplos.' },
+    { q: 'Há exemplo concreto ou dado no argumento?',
+      ok: /\b(por exemplo|como|tal como|dado que|segundo|quando|caso de|%|\d+)\b/i.test(arg) || arg.length > 80,
+      dica: 'Acrescente um exemplo real ou dado verificável para sustentar a tese.' },
+    { q: 'O contra-argumento foi considerado?',
+      ok: contra.length > 5,
+      dica: 'Considerar objeções fortalece o argumento e demonstra honestidade intelectual.' },
+    { q: 'O argumento evita linguagem absoluta?',
+      ok: !/\b(sempre|nunca|todos|ninguém|absolutamente|certamente)\b/i.test(arg),
+      dica: 'Substitua termos absolutos por qualificadores precisos.' },
+    { q: 'A tese e o argumento estão coerentes?',
+      ok: tese.length > 5 && arg.length > 20,
+      dica: 'Verifique se o argumento realmente sustenta a tese apresentada.' }
+  ];
+
+  const aprovados = criterios.filter(c => c.ok).length;
+  const score     = Math.round((aprovados / criterios.length) * 100);
+  const cor       = score >= 75 ? 'var(--green2)' : score >= 50 ? 'var(--yellow)' : 'var(--red)';
+  const nivel     = score >= 75 ? '✅ Sólido' : score >= 50 ? '⚠️ Razoável' : '❌ Frágil';
+
+  setTimeout(() => {
+    btn.disabled = false;
+    box.innerHTML = `
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding:.9rem;background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r)">
+        <div class="mono" style="font-size:2.2rem;font-weight:700;color:${cor};min-width:4rem;text-align:center">${score}%</div>
+        <div>
+          <div class="mono" style="font-size:.8rem;font-weight:700;color:${cor}">${nivel}</div>
+          <div style="font-size:.78rem;color:var(--ink2);margin-top:.2rem">${aprovados}/${criterios.length} critérios atendidos</div>
+        </div>
+      </div>
+      <div style="margin-bottom:.75rem">
+        ${criterios.map(c => `
+          <div style="display:flex;gap:.6rem;align-items:flex-start;padding:.5rem .65rem;background:${c.ok?'rgba(168,195,160,.1)':'rgba(201,123,106,.08)'};border:1.5px solid ${c.ok?'var(--green2)':'rgba(201,123,106,.4)'};border-radius:var(--r);margin-bottom:.35rem">
+            <span style="font-size:.9rem;flex-shrink:0">${c.ok?'✅':'❌'}</span>
+            <div>
+              <div style="font-size:.82rem;font-weight:500">${c.q}</div>
+              ${!c.ok ? `<div style="font-size:.75rem;color:var(--ink3);margin-top:.15rem">💡 ${c.dica}</div>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>
+      ${contra ? `
+        <div class="alert alert-b">
+          <strong>Sobre o contra-argumento:</strong> "${escHtml(contra)}"<br>
+          <span style="font-size:.8rem">Considere: o seu argumento principal responde diretamente a essa objeção? Se não, fortaleça-o.</span>
+        </div>` : ''}
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem">
+        <button class="btn btn-sm btn-g" onclick="salvarEpvtComoNota()">📝 Salvar como nota</button>
+        <button class="btn btn-sm" onclick="gerarFCDoEpvt()">🃏 Flashcard</button>
+        <span class="ai-badge">🤖 EPVT Local</span>
+      </div>`;
+
+    window._ultimoEpvt = { tese, arg, contra, score, criterios };
+    xpGanhar(10);
+  }, 400);
+}
+
+function salvarEpvtComoNota() {
+  const e = window._ultimoEpvt;
+  if (!e) { toast('Execute a verificação primeiro!'); return; }
+  S.notas.unshift({
+    id: gerarId('n'),
+    titulo: 'Argumento: ' + (e.tese.substring(0, 45) + (e.tese.length > 45 ? '...' : '')),
+    conteudo: e.arg,
+    interp: `Score EPVT: ${e.score}%`,
+    contexto: '', limite: e.contra || '',
+    contra: '', emocao: '',
+    pasta: 'recursos',
+    data: new Date().toLocaleDateString('pt-BR'),
+    conexoes: ['EPVT', 'Argumento Crítico']
+  });
+  xpGanhar(5);
+  salvarEstado();
+  renderNotas();
+  atualizarStats();
+  toast('📝 Argumento salvo como nota! +5 XP');
+}
+
+function gerarFCDoEpvt() {
+  const e = window._ultimoEpvt;
+  if (!e) { toast('Execute a verificação primeiro!'); return; }
+  const fracos = e.criterios.filter(c => !c.ok);
+  if (fracos.length) {
+    S.flashcards.push({
+      id: gerarId('fc'),
+      pergunta: `Como melhorar um argumento fraco sobre "${e.tese.substring(0,40)}"?`,
+      resposta: fracos.map(c => `• ${c.q}: ${c.dica}`).join('\n'),
+      cat: 'estudo', facilidade: 0, proximaRevisao: 0, revisoes: 0
+    });
+  } else {
+    S.flashcards.push({
+      id: gerarId('fc'),
+      pergunta: `Quais são os critérios de um argumento sólido (EPVT)?`,
+      resposta: e.criterios.map(c => `• ${c.q}`).join('\n'),
+      cat: 'ocmt', facilidade: 0, proximaRevisao: 0, revisoes: 0
+    });
+  }
+  xpGanhar(5);
+  salvarEstado();
+  renderFlashcards();
+  atualizarStats();
+  toast('🃏 Flashcard criado! +5 XP');
+}
+
+// ─────────────────────────────────────────────────────────
+// 12. IGNORÂNCIA DELIBERADA
+// ─────────────────────────────────────────────────────────
+function addIgnorancia() {
+  const v = document.getElementById('ig-novo').value.trim();
+  if (!v) return;
+  S.ignorancias.push({ id: ++S.nextId, texto: v });
+  salvarEstado();
+  renderIgnorancias();
+  document.getElementById('ig-novo').value = '';
+  toast('✅ Adicionado à lista!');
+}
+
+function renderIgnorancias() {
+  const cont = document.getElementById('ig-lista');
+  if (!cont) return;
+  if (!S.ignorancias.length) {
+    cont.innerHTML = '<p class="mono" style="font-size:.78rem;color:var(--ink4);font-style:italic">Nenhum item ainda.</p>';
+    return;
+  }
+  cont.innerHTML = S.ignorancias.map(ig => `
+    <div style="display:flex;align-items:center;gap:.5rem;padding:.45rem .7rem;background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);margin-bottom:.35rem">
+      <span style="flex:1;font-size:.84rem">🌿 ${escHtml(ig.texto)}</span>
+      <button style="background:none;border:none;color:var(--ink4);cursor:pointer;font-size:.85rem;padding:.1rem .2rem;transition:.12s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--ink4)'" onclick="removerIgnorancia(${ig.id})">✕</button>
+    </div>`).join('');
+}
+
+function removerIgnorancia(id) {
+  S.ignorancias = S.ignorancias.filter(x => x.id !== id);
+  salvarEstado();
+  renderIgnorancias();
+}
+
+// ─────────────────────────────────────────────────────────
+// 13. PERFIL / XP / SKILLS
+// ─────────────────────────────────────────────────────────
+function renderPerfil() {
+  const nome = S.nome || 'Estudante';
+  document.getElementById('perfil-nome').textContent = nome;
+  const xp  = S.xp || 0;
+  const lvl = Math.floor(xp / 100) + 1;
+  const xpN = xp % 100;
+  document.getElementById('perfil-nivel').textContent  = lvl;
+  document.getElementById('perfil-xp-val').textContent = xp;
+  document.getElementById('xp-fill').style.width       = xpN + '%';
+  document.getElementById('xp-label').textContent      = `${xpN}/100 para nível ${lvl + 1}`;
+
+  // Skills dinâmicas baseadas no uso real
+  const skills = [
+    { nome:'Organização', val: Math.min(100, Object.values(S.pkm).flat().length * 8),      cor:'var(--blue)' },
+    { nome:'Memória',     val: Math.min(100, S.flashcards.length * 7),                     cor:'var(--green2)' },
+    { nome:'Análise',     val: Math.min(100, S.notas.filter(n=>n.limite||n.contra).length*15), cor:'var(--yellow)' },
+    { nome:'Foco',        val: Math.min(100, (S.pomo.sessoes||0) * 12),                     cor:'var(--red)' }
+  ];
+  document.getElementById('skill-grid').innerHTML = skills.map(sk => `
+    <div class="skill-card">
+      <div class="skill-name">${sk.nome}</div>
+      <div class="skill-bar-bg"><div class="skill-bar" style="width:${sk.val}%;background:${sk.cor}"></div></div>
+      <div class="skill-pct">${sk.val}%</div>
+    </div>`).join('');
+
+  // Configurações
+  const hoje = new Date().toDateString();
+  if (S.dataPost !== hoje) { S.dataPost = hoje; S.postHoje = 0; salvarEstado(); }
+  const statusOnline = BRIO_ONLINE ? `online como ${S.nome || '@' + S.nick}` : 'offline/local';
+  const fontAtual = (S.config.fontSize || 'normal');
+  const cfgs = [
+    { key:'limiteFeed', label:'Limite anti-vício no feed (5/dia)', icon:'📵', sub:`${S.postHoje||0}/5 posts usados hoje · feed ${statusOnline}` },
+    { key:'lembretes',  label:'Lembrete de revisão diária',        icon:'⏰', sub:'aviso diário às 20h' },
+    { key:'darkMode',   label:'Modo escuro',                       icon:'🌙', sub:'versão noturna do BRIO' },
+    { key:'soundFx',    label:'Sons do sistema',                  icon:'🔊', sub:'cliques suaves, salvar, erro, XP e fim do foco' }
+  ];
+  document.getElementById('config-lista').innerHTML = `
+    <div class="online-card">
+      <div style="display:flex;align-items:center;gap:.65rem">
+        <span class="setting-icon">🌐</span>
+        <div style="flex:1"><strong>Modo online do feed</strong><div class="status-mini">${statusOnline}. Ative aqui para escolher nick e publicar no feed compartilhado.</div></div>
+        <div class="toggle-sw${BRIO_ONLINE?' on':''}" onclick="alternarFeedOnline()"></div>
+      </div>
+      <div class="online-actions"><button class="btn btn-xs" onclick="trocarNickBRIO()">@ Trocar nick</button><button class="btn btn-xs" onclick="renderFeed();toast('Feed atualizado')">↻ Atualizar feed</button></div>
+    </div>
+    <div class="setting-row"><span class="setting-icon">🔎</span><span class="setting-label">Tamanho da letra<div class="status-mini">Atual: ${fontAtual === 'normal' ? 'normal' : fontAtual === 'large' ? 'maior' : 'extra grande'}</div><div class="a11y-row"><button class="btn btn-xs a11y-btn" onclick="setFontSizeBRIO('normal')">Normal</button><button class="btn btn-xs a11y-btn btn-g" onclick="setFontSizeBRIO('large')">Maior</button><button class="btn btn-xs a11y-btn btn-b" onclick="setFontSizeBRIO('xlarge')">Extra</button></div></span></div>
+    ` + cfgs.map(c => `
+    <div class="setting-row"><span class="setting-icon">${c.icon}</span><span class="setting-label">${c.label}<div class="status-mini">${c.sub}</div></span><div class="toggle-sw${S.config[c.key]?' on':''}" onclick="toggleConfig('${c.key}',this)"></div></div>`).join('');
+}
+
+async function trocarNickBRIO() {
+  const anterior = S.nick || '';
+  localStorage.removeItem('brio_nick'); S.nick = '';
+  const nick = pedirNickBRIO(true);
+  if (!nick) { S.nick = anterior; if (anterior) localStorage.setItem('brio_nick', anterior); renderPerfil(); return; }
+  S.nick = nick; S.nome = '@' + nick; localStorage.setItem('brio_nick', nick); salvarEstado();
+  if (BRIO_ONLINE && BRIO_DB && BRIO_UID) await BRIO_DB.ref('users/' + BRIO_UID).update({nick, nome:'@'+nick, atualizadoEm: Date.now()});
+  renderPerfil(); setarData(); toast('Nick atualizado para @' + nick);
+}
+
+function toggleConfig(key, el) {
+  S.config[key] = !S.config[key];
+  el.classList.toggle('on', S.config[key]);
+  salvarEstado();
+  if (key === 'darkMode') aplicarTema();
+  if (key === 'lembretes') { if (S.config[key] && 'Notification' in window && Notification.permission === 'default') Notification.requestPermission(); agendarLembreteRevisao(); }
+  renderPerfil();
+  toast(S.config[key] ? '✅ Ativado' : '⭕ Desativado');
+}
+
+function loadAvatar(input) {
+  const f = input.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('pav-emoji').style.display = 'none';
+    const img = document.getElementById('pav-img');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    S.avatarUrl = e.target.result;
+    salvarEstado();
+    toast('📸 Foto de perfil atualizada!');
+  };
+  r.readAsDataURL(f);
+}
+
+
+// ─────────────────────────────────────────────────────────
+// 13.5. SONS DO SISTEMA · BRIO
+// Sons leves gerados por Web Audio, sem arquivos MP3.
+// ─────────────────────────────────────────────────────────
+if (!S.config) S.config = {};
+if (typeof S.config.soundFx === 'undefined') S.config.soundFx = true;
+salvarEstado();
+
+const BRIO_SFX = (() => {
+  let ctx = null;
+  let unlocked = false;
+  let lastClickAt = 0;
+
+  function enabled() {
+    return !!(S && S.config && S.config.soundFx);
+  }
+
+  function getCtx() {
+    if (!ctx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return null;
+      ctx = new AudioContext();
+    }
+    if (ctx.state === 'suspended') ctx.resume().catch(()=>{});
+    unlocked = true;
+    return ctx;
+  }
+
+  function tone(freq=440, duration=0.06, type='sine', volume=0.045, delay=0) {
+    if (!enabled()) return;
+    const c = getCtx();
+    if (!c) return;
+    const start = c.currentTime + delay;
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, start);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, volume), start + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    osc.connect(gain);
+    gain.connect(c.destination);
+    osc.start(start);
+    osc.stop(start + duration + 0.02);
+  }
+
+  function play(kind='click') {
+    if (!enabled()) return;
+    try {
+      if (kind === 'click') {
+        const now = Date.now();
+        if (now - lastClickAt < 85) return;
+        lastClickAt = now;
+        tone(520, 0.045, 'sine', 0.028);
+      } else if (kind === 'success') {
+        tone(523.25, 0.055, 'sine', 0.04);
+        tone(659.25, 0.075, 'sine', 0.035, 0.055);
+      } else if (kind === 'error') {
+        tone(220, 0.075, 'triangle', 0.045);
+        tone(165, 0.085, 'triangle', 0.035, 0.07);
+      } else if (kind === 'xp') {
+        tone(659.25, 0.055, 'sine', 0.04);
+        tone(783.99, 0.065, 'sine', 0.035, 0.052);
+        tone(987.77, 0.09, 'sine', 0.03, 0.112);
+      } else if (kind === 'done') {
+        tone(392, 0.08, 'sine', 0.04);
+        tone(523.25, 0.10, 'sine', 0.038, 0.08);
+        tone(783.99, 0.16, 'sine', 0.032, 0.18);
+      }
+    } catch(e) { /* sons são opcionais */ }
+  }
+
+  function unlock() {
+    getCtx();
+  }
+
+  return { play, unlock, enabled };
+})();
+
+// Libera áudio no primeiro toque e adiciona som discreto aos controles.
+document.addEventListener('pointerdown', () => BRIO_SFX.unlock(), { once:true, passive:true });
+document.addEventListener('click', (ev) => {
+  const alvo = ev.target.closest('button,.btn,.nav-btn,.qa,.toggle-sw,.folder-head,.react-btn');
+  if (alvo && !alvo.classList.contains('modal-close')) BRIO_SFX.play('click');
+}, true);
+
+// Reforça o toast com feedback sonoro contextual.
+const toastBRIOOriginal = toast;
+toast = function(msg, dur=2400) {
+  const t = String(msg || '').toLowerCase();
+  if (S.config && S.config.soundFx) {
+    if (t.includes('erro') || t.includes('falha') || t.includes('⚠') || t.includes('indisponível') || t.includes('preencha')) BRIO_SFX.play('error');
+    else if (t.includes('xp')) BRIO_SFX.play('xp');
+    else if (t.includes('salv') || t.includes('public') || t.includes('atualiz') || t.includes('ativado') || t.includes('✅')) BRIO_SFX.play('success');
+  }
+  return toastBRIOOriginal(msg, dur);
+};
+
+// Ganha XP com som próprio, sem alterar a lógica original.
+const xpGanharBRIOOriginal = xpGanhar;
+xpGanhar = function(n) {
+  const r = xpGanharBRIOOriginal(n);
+  if ((n || 0) > 0) BRIO_SFX.play('xp');
+  return r;
+};
+
+// ToggleConfig com retorno sonoro imediato para Sons do sistema.
+const toggleConfigBRIOOriginal = toggleConfig;
+toggleConfig = function(key, el) {
+  const r = toggleConfigBRIOOriginal(key, el);
+  if (key === 'soundFx') {
+    if (S.config.soundFx) {
+      BRIO_SFX.unlock();
+      setTimeout(()=>BRIO_SFX.play('success'), 40);
+      toast('🔊 Sons do sistema ativados');
+    } else {
+      toast('🔇 Sons do sistema desativados');
+    }
+  }
+  return r;
+};
+
+// Som especial ao concluir o Pomodoro, detectando mudança de fase/tempo.
+let BRIO_POMO_LAST_PHASE = S.pomo && S.pomo.fase;
+setInterval(() => {
+  if (!S || !S.pomo) return;
+  const phase = S.pomo.fase;
+  if (BRIO_POMO_LAST_PHASE && phase !== BRIO_POMO_LAST_PHASE) BRIO_SFX.play('done');
+  BRIO_POMO_LAST_PHASE = phase;
+}, 1200);
+
+
+
+// ─────────────────────────────────────────────────────────
+// BRIO PROFESSOR · painel docente conectado ao aluno
+// ─────────────────────────────────────────────────────────
+function ensureProfessorBRIO(){
+  if(!S.professor) S.professor = {};
+  if(!Array.isArray(S.professor.atividades)) S.professor.atividades = [];
+  if(!Array.isArray(S.professor.respostas)) S.professor.respostas = [];
+  if(!Array.isArray(S.professor.relatorios)) S.professor.relatorios = [];
+}
+
+function profCamposSelecionados(){
+  return Array.from(document.querySelectorAll('.prof-campo:checked')).map(c=>c.value);
+}
+
+function profSalvarAtividade(){
+  ensureProfessorBRIO();
+  const titulo = document.getElementById('prof-atv-titulo').value.trim();
+  if(!titulo){ toast('Preencha o título da atividade.'); return; }
+  const atv = {
+    id: gerarId('atv'), titulo,
+    componente: document.getElementById('prof-atv-comp').value.trim() || 'Componente não informado',
+    ano: document.getElementById('prof-atv-ano').value.trim() || 'Série não informada',
+    objetivo: document.getElementById('prof-atv-objetivo').value.trim(),
+    conteudo: document.getElementById('prof-atv-conteudo').value.trim(),
+    exemplos: document.getElementById('prof-atv-exemplos').value.trim(),
+    materiais: document.getElementById('prof-atv-materiais').value.trim(),
+    campos: profCamposSelecionados(),
+    data: new Date().toLocaleDateString('pt-BR'),
+    publicada: false
+  };
+  S.professor.atividades.unshift(atv);
+  // também guarda como nota profunda do professor para não se perder
+  S.notas.unshift({
+    id: gerarId('n'), titulo:'Professor · '+titulo, conteudo: atv.conteudo || atv.objetivo || 'Atividade criada no BRIO Professor.',
+    pasta:'projetos', data: atv.data, interp:'Nota profunda docente criada no BRIO Professor.', contexto: `${atv.componente} · ${atv.ano}`, limite:'', contra:'', emocao:'', conexoes:['BRIO Professor','OCMT','EPVT']
+  });
+  xpGanhar(10); salvarEstado(); renderProfessor(); renderNotas(); atualizarStats(); closeModal('modal-prof-atividade');
+  ['prof-atv-titulo','prof-atv-comp','prof-atv-ano','prof-atv-objetivo','prof-atv-conteudo','prof-atv-exemplos','prof-atv-materiais'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  toast('🧾 Atividade docente salva! +10 XP');
+}
+
+function profPublicarAtividade(id){
+  ensureProfessorBRIO();
+  const atv = S.professor.atividades.find(a=>a.id===id);
+  if(!atv) return;
+  const corpo = `📚 Atividade do professor: ${atv.titulo}\n\nObjetivo: ${atv.objetivo || 'organizar, externalizar e verificar o pensamento.'}\n\nConteúdo-base: ${(atv.conteudo||'').substring(0,500)}${(atv.conteudo||'').length>500?'...':''}`;
+  S.feed.unshift({
+    id: gerarId('p'), autor:'BRIO Professor', autorNick:'BRIO Professor', autorUid:'professor-local', av:'👩‍🏫', tipo:'resumo', corpo,
+    pergunta: 'Responda usando EPVT: como você verificou sua resposta?', reacoes:{entendi:0,duvida:0,exemplo:0}, minhaReacao:null,
+    tempo:'agora', links: atv.materiais ? [atv.materiais] : [], arquivo:null, comentarios:[], createdAt:Date.now(), origemProfessor:id
+  });
+  // cria item no PARA do aluno para aparecer como projeto/atividade
+  S.pkm.projetos.unshift({id: gerarId('pkm'), titulo:'Atividade: '+atv.titulo, desc:`${atv.componente} · ${atv.ano} · preencher: ${atv.campos.join(', ')}`});
+  atv.publicada = true;
+  xpGanhar(8); salvarEstado(); renderProfessor(); renderFeed(); renderPARA(); atualizarStats(); toast('📣 Atividade enviada ao feed e ao PARA do aluno.');
+}
+
+function profPublicarFeed(){
+  ensureProfessorBRIO();
+  const msg = document.getElementById('prof-feed-msg').value.trim();
+  const pergunta = document.getElementById('prof-feed-pergunta').value.trim();
+  const tipo = document.getElementById('prof-feed-tipo').value;
+  if(!msg){ toast('Escreva a mensagem do post docente.'); return; }
+  const mapa = {desafio:'🎯 Desafio', revisao:'⏰ Revisão', explicacao:'📖 Explicação', pergunta:'❓ Pergunta', material:'📎 Material'};
+  S.feed.unshift({id:gerarId('p'), autor:'BRIO Professor', autorNick:'BRIO Professor', autorUid:'professor-local', av:'👩‍🏫', tipo:'insight', corpo:`${mapa[tipo]||'📣 Post docente'}\n\n${msg}`, pergunta, reacoes:{entendi:0,duvida:0,exemplo:0}, minhaReacao:null, tempo:'agora', links:extrairLinks(msg), arquivo:null, comentarios:[], createdAt:Date.now()});
+  xpGanhar(6); salvarEstado(); renderFeed(); renderProfessor(); closeModal('modal-prof-feed');
+  document.getElementById('prof-feed-msg').value=''; document.getElementById('prof-feed-pergunta').value='';
+  toast('📣 Post docente publicado no feed!');
+}
+
+function profAnalisaResposta(texto, atv){
+  const t = (texto||'').toLowerCase();
+  const dificuldades = [];
+  const facilidades = [];
+  const sugestoes = [];
+  if(t.length < 90){ dificuldades.push('resposta curta'); sugestoes.push('pedir ampliação com exemplo e justificativa'); }
+  if(!/(porque|pois|portanto|logo|assim|por isso|justifica|evidência|fonte|exemplo)/i.test(texto)){ dificuldades.push('ausência de justificativa'); sugestoes.push('retomar EPVT: como você verificou?'); }
+  if(/\b(sempre|nunca|todo mundo|todos|ninguém|só|com certeza|óbvio|burro|preguiça)\b/i.test(texto)){ dificuldades.push('generalização ou linguagem emocional'); sugestoes.push('substituir termos absolutos por linguagem mais precisa'); }
+  if((atv?.titulo||'').toLowerCase().includes('substantivo') && t.includes('saudade') && t.includes('concreto')){ dificuldades.push('confusão entre abstrato e concreto'); sugestoes.push('revisar diferença entre ideia/sentimento e objeto perceptível'); }
+  if(/exemplo|por exemplo|como/i.test(texto)) facilidades.push('uso de exemplo');
+  if(/fonte|dado|pesquisa|evidência/i.test(texto)) facilidades.push('busca de evidência');
+  if(/por outro lado|entretanto|mas|porém|contraponto/i.test(texto)) facilidades.push('considera contraponto');
+  let status = 'compreendeu';
+  if(dificuldades.length >= 2) status = 'dificuldade';
+  else if(dificuldades.length === 1) status = 'parcial';
+  return {status, dificuldades, facilidades, sugestao: sugestoes[0] || 'propor desafio de aprofundamento e comparação entre respostas'};
+}
+
+function profSalvarRespostaManual(){
+  ensureProfessorBRIO();
+  const atividadeId = document.getElementById('prof-resp-atividade').value;
+  const atv = S.professor.atividades.find(a=>a.id===atividadeId);
+  if(!atv){ toast('Crie uma atividade primeiro.'); return; }
+  const aluno = document.getElementById('prof-resp-aluno').value.trim() || 'Aluno sem nome';
+  const texto = document.getElementById('prof-resp-texto').value.trim();
+  if(!texto){ toast('Digite a resposta do aluno.'); return; }
+  const analise = profAnalisaResposta(texto, atv);
+  S.professor.respostas.unshift({id:gerarId('resp'), atividadeId, atividadeTitulo:atv.titulo, aluno, texto, analise, data:new Date().toLocaleDateString('pt-BR'), createdAt:Date.now()});
+  xpGanhar(4); salvarEstado(); renderProfessor(); document.getElementById('prof-resp-aluno').value=''; document.getElementById('prof-resp-texto').value='';
+  toast('🔬 Resposta analisada no painel docente.');
+}
+
+function profSimularTurma(){
+  ensureProfessorBRIO();
+  if(!S.professor.atividades.length){ toast('Crie uma atividade antes de simular a turma.'); return; }
+  const atv = S.professor.atividades[0];
+  const exemplos = [
+    ['Maria Clara', `Eu acho que ${atv.titulo} tem relação com o que estudamos. Por exemplo, posso separar ideias e justificar usando uma fonte ou exemplo.`],
+    ['João Victor', 'É isso porque todo mundo sabe e sempre acontece assim.'],
+    ['Ana Luiza', 'Eu entendi um pouco, mas não sei explicar direito.'],
+    ['Rafael', 'Por outro lado, dá para pensar em exceções. Usei exemplo e tentei verificar antes de concluir.']
+  ];
+  exemplos.forEach(([aluno,texto])=>S.professor.respostas.unshift({id:gerarId('resp'), atividadeId:atv.id, atividadeTitulo:atv.titulo, aluno, texto, analise:profAnalisaResposta(texto, atv), data:new Date().toLocaleDateString('pt-BR'), createdAt:Date.now()}));
+  salvarEstado(); renderProfessor(); toast('👥 Respostas simuladas geradas para diagnóstico.');
+}
+
+function profExcluirAtividade(id){
+  ensureProfessorBRIO();
+  if(!confirm('Excluir esta atividade do painel do professor?')) return;
+  S.professor.atividades = S.professor.atividades.filter(a=>a.id!==id);
+  salvarEstado(); renderProfessor(); toast('Atividade excluída.');
+}
+
+function profGerarRelatorio(){
+  ensureProfessorBRIO();
+  const reps = S.professor.respostas || [];
+  if(!reps.length){ toast('Ainda não há respostas analisadas.'); return; }
+  const difs = {};
+  const facs = {};
+  reps.forEach(r=>{ (r.analise.dificuldades||[]).forEach(d=>difs[d]=(difs[d]||0)+1); (r.analise.facilidades||[]).forEach(f=>facs[f]=(facs[f]||0)+1); });
+  const topDif = Object.entries(difs).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`${k} (${v})`).join(', ') || 'sem dificuldade recorrente';
+  const topFac = Object.entries(facs).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`${k} (${v})`).join(', ') || 'ainda sem padrão de facilidade';
+  const texto = `Relatório BRIO Professor — ${new Date().toLocaleDateString('pt-BR')}\n\nA turma apresenta como principais dificuldades: ${topDif}. Como facilidades observáveis, destacam-se: ${topFac}. Sugere-se uma intervenção com retomada dos critérios EPVT, ampliação de exemplos e comparação entre respostas para fortalecer metacognição e argumentação.`;
+  S.notas.unshift({id:gerarId('n'), titulo:'Relatório docente BRIO', conteudo:texto, pasta:'areas', data:new Date().toLocaleDateString('pt-BR'), interp:'Síntese pedagógica gerada a partir do painel do professor.', contexto:'BRIO Professor', limite:'', contra:'', emocao:'', conexoes:['diagnóstico','OCMT','EPVT']});
+  salvarEstado(); renderNotas(); toast('📊 Relatório salvo como nota.');
+}
+
+function renderProfessor(){
+  ensureProfessorBRIO();
+  const atvs = S.professor.atividades;
+  const reps = S.professor.respostas;
+  const allDifs = reps.flatMap(r=>r.analise?.dificuldades||[]);
+  const allFacs = reps.flatMap(r=>r.analise?.facilidades||[]);
+  const setTxt = (id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
+  setTxt('prof-total-atividades', atvs.length);
+  setTxt('prof-total-respostas', reps.length);
+  setTxt('prof-total-dificuldades', new Set(allDifs).size);
+  setTxt('prof-total-facilidades', new Set(allFacs).size);
+
+  const lista = document.getElementById('prof-atividades-lista');
+  if(lista){
+    lista.innerHTML = atvs.length ? atvs.map(a=>`<div class="prof-activity">
+      <div class="prof-activity-title">${escHtml(a.titulo)}</div>
+      <div class="prof-activity-meta">${escHtml(a.componente)} · ${escHtml(a.ano)} · ${escHtml(a.data)} ${a.publicada?'· enviada ao aluno':''}</div>
+      <div class="prof-activity-body"><strong>Objetivo:</strong> ${escHtml(a.objetivo || 'não informado')}</div>
+      <div class="student-fields">${(a.campos||[]).map(c=>`<span class="student-field-chip">${escHtml(c)}</span>`).join('')}</div>
+      <div class="prof-actions"><button class="btn btn-xs btn-g" onclick="profPublicarAtividade('${a.id}')">📣 Enviar ao aluno</button><button class="btn btn-xs" onclick="document.getElementById('prof-resp-atividade').value='${a.id}';document.getElementById('prof-resp-aluno').focus();">✍️ Resposta</button><button class="btn btn-xs btn-y" onclick="profSimularTurma()">👥 Simular</button><button class="btn btn-xs btn-r" onclick="profExcluirAtividade('${a.id}')">🗑</button></div>
+    </div>`).join('') : '<div class="empty-msg">Crie a primeira nota profunda para a turma.</div>';
+  }
+
+  const sel = document.getElementById('prof-resp-atividade');
+  if(sel){ sel.innerHTML = atvs.length ? atvs.map(a=>`<option value="${a.id}">${escHtml(a.titulo)}</option>`).join('') : '<option value="">Nenhuma atividade criada</option>'; }
+
+  const diag = document.getElementById('prof-diagnostico');
+  if(diag){
+    if(!reps.length) diag.innerHTML = '<div class="empty-msg">Registre respostas ou simule uma turma para gerar diagnóstico.</div>';
+    else {
+      const difs = {}; const facs = {};
+      reps.forEach(r=>{ (r.analise.dificuldades||[]).forEach(d=>difs[d]=(difs[d]||0)+1); (r.analise.facilidades||[]).forEach(f=>facs[f]=(facs[f]||0)+1); });
+      const difHtml = Object.entries(difs).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="prof-diagnostic"><strong>⚠️ ${escHtml(k)} (${v})</strong><p>Intervenção sugerida: retomar critérios, pedir justificativa e comparar exemplos.</p></div>`).join('');
+      const facHtml = Object.entries(facs).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="prof-diagnostic"><strong>✅ ${escHtml(k)} (${v})</strong><p>Facilidade observada: transformar em modelo para a turma.</p></div>`).join('');
+      diag.innerHTML = (difHtml || '<div class="prof-diagnostic"><strong>Sem dificuldade recorrente</strong></div>') + (facHtml ? '<hr class="divider">' + facHtml : '');
+    }
+  }
+
+  const respLista = document.getElementById('prof-respostas-lista');
+  if(respLista){
+    respLista.innerHTML = reps.length ? reps.slice(0,12).map(r=>{ const st=r.analise.status; const cls=st==='compreendeu'?'ok':st==='parcial'?'mid':'bad'; return `<div class="prof-response"><div class="prof-response-head"><strong>${escHtml(r.aluno)}</strong><span class="prof-status ${cls}">${escHtml(st)}</span><span class="status-mini">${escHtml(r.atividadeTitulo||'atividade')}</span></div><div style="font-size:.78rem;color:var(--ink2);line-height:1.55">${escHtml(r.texto)}</div><div class="status-mini"><strong>Dificuldades:</strong> ${(r.analise.dificuldades||[]).map(escHtml).join(', ') || 'não identificadas'}<br><strong>Facilidades:</strong> ${(r.analise.facilidades||[]).map(escHtml).join(', ') || 'a desenvolver'}<br><strong>Sugestão:</strong> ${escHtml(r.analise.sugestao)}</div></div>`; }).join('') : '<div class="empty-msg">Nenhuma resposta analisada ainda.</div>';
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────
+// 14. INICIALIZAÇÃO FINAL
+// ─────────────────────────────────────────────────────────
+ensureProfessorBRIO();
+aplicarTema();
+configurarPreviewArquivoPost();
+showPeirce('alfa');
+// Restaurar avatar se salvo
+if (S.avatarUrl) {
+  document.getElementById('pav-emoji').style.display = 'none';
+  const img = document.getElementById('pav-img');
+  img.src = S.avatarUrl;
+  img.style.display = 'block';
+}
+
+// Marcar acesso de hoje na streak
+(function marcarHoje() {
+  const hoje = new Date().toDateString();
+  if (S.ultimoAcesso !== hoje) {
+    S.ultimoAcesso = hoje;
+    if (!S.streakDias) S.streakDias = [false,false,false,false,false,false,false];
+    S.streakDias = [...S.streakDias.slice(1), true];
+    salvarEstado();
+  }
+})();
+
+// Iniciar conexão online apenas se a pessoa ativou no Perfil
+if (S.config && S.config.onlineFeed && (S.nick || localStorage.getItem('brio_nick'))) iniciarFirebaseBRIO(false);
+
+// Iniciar cards se havia estudo em progresso
+if (filaEstudo.length === 0) iniciarEstudo();
+</script>
+</body>
+</html>
