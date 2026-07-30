@@ -8,6 +8,18 @@ O **BRIO** nasceu como uma proposta de ferramenta digital voltada às necessidad
 
 A aplicação busca reunir, em um mesmo ambiente, recursos para organização de turmas, planejamento de aulas, acompanhamento pedagógico e registro da prática docente.
 
+## Capturas de tela
+
+<p align="center">
+  <img src="imagens/tela-inicial-brio.png" alt="Tela inicial do BRIO" width="230">
+  <img src="imagens/nota-profunda-brio.png" alt="Área de notas profundas do BRIO" width="230">
+</p>
+
+<p align="center">
+  <img src="imagens/grapho.png" alt="Área de grafos do BRIO" width="230">
+  <img src="imagens/perfil-brio.png" alt="Tela de perfil do BRIO" width="230">
+</p>
+
 ## Objetivo
 
 Desenvolver uma ferramenta acessível, organizada e intuitiva que ajude professores a administrar informações escolares e refletir sobre sua prática pedagógica.
