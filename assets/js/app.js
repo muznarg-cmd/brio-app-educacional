@@ -2169,13 +2169,9 @@ function normalizarPostOnline(id,p){
   return {id,legacy:p.schemaVersion!==1,autorUid:p.autorUid,autor:text(p.autor||p.autorNick,'@brio'),av:text(p.av,'🧠'),tipo:text(p.tipo,'reflexao'),corpo:text(p.corpo),pergunta:text(p.pergunta),reacoes,minhaReacao:['entendi','duvida','exemplo'].includes(reactions[BRIO_UID])?reactions[BRIO_UID]:null,tempo:tempoRelativoBRIO(Number(p.createdAt)||0),links:Array.isArray(p.links)?p.links.filter(x=>typeof x==='string').slice(0,20):[],arquivo:BRIO_object(p.arquivo)?{nome:text(p.arquivo.nome),tipo:text(p.arquivo.tipo),data:typeof p.arquivo.data==='string'&&p.arquivo.data.length<BRIO_MAX_IMPORT?p.arquivo.data:'',isImage:p.arquivo.isImage===true}:null,comentarios};
 }
 async function iniciarFirebaseBRIO(forcarNick=false){
-  
-  // HOMOLOGAÇÃO: impedir conexão com o Firebase de produção.
-  BRIO_setFeedNotice(
-    'Feed online desativado neste ambiente de homologação.'
-  );
-  toast('Homologação: o feed online está bloqueado.');
-  return false;
+ async function iniciarFirebaseBRIO(forcarNick=false){
+  if(!BRIO_PERSIST_RESTORE_DONE||BRIO_READ_ONLY||!forcarNick||BRIO_FEED_CONNECTING)return false; 
+ 
 
   if(!BRIO_PERSIST_RESTORE_DONE||BRIO_READ_ONLY||!forcarNick||BRIO_FEED_CONNECTING)return false;
   const nick=pedirNickBRIO(true);if(!nick)return false;
