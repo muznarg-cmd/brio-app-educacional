@@ -1,0 +1,166 @@
+
+/* ═══════════════════════════════════════════════════════════
+   BRIO · ESTÚDIO COGNITIVO / edição 2.2
+   Design neo-retrô experimental: editorial suíço + terminal
+   de pesquisa + papel quadriculado. Sem imagens/fonte externa.
+   Camada de estilo: lógica de negócios mantida.
+   ═══════════════════════════════════════════════════════════ */
+body.briox {
+ --bg:#F9F7EF; --paper:#EEEADF; --paper2:#E7E2D7; --paper3:#D8D1C3;
+ --green:#C4EF8B; --green2:#719B45; --green3:#355B2B;
+ --blue:#475FE5; --blue2:#344CC4; --blue3:#1C339F;
+ --ink:#202629; --ink2:#394043; --ink3:#626969; --ink4:#808585;
+ --bdr:#B8BBB3; --bdr2:#616C68; --red:#F77B64; --red2:#B44A3D;
+ --yellow:#F7D569; --yellow2:#9A741C; --purple:#9C93E7; --purple2:#50489D;
+ --r:2px; --r2:3px; --sh:3px 3px 0 #20262918; --sh2:4px 4px 0 #20262926; --sh3:8px 8px 0 #20262928;
+ font-family:'Trebuchet MS',Arial,sans-serif;letter-spacing:-.005em;
+ background:repeating-linear-gradient(0deg,transparent,transparent 33px,#23392a0c 34px),
+            repeating-linear-gradient(90deg,transparent,transparent 33px,#23392a0c 34px),#D6D8CE;
+}
+body.briox.dark {
+ --bg:#151D20; --paper:#202A2A; --paper2:#2C3534; --paper3:#34413D;
+ --ink:#F4F4E9; --ink2:#DEE5D7; --ink3:#ACBAAD; --ink4:#9CAC9A;
+ --bdr:#55675E; --bdr2:#84928A; --green:#B7F080; --green2:#A2D474; --green3:#D4F2AF;
+ --blue:#91A8FF; --blue2:#B2C1FF; --blue3:#DCE4FF; --red:#E28C77; --red2:#FDB5A2;
+ --yellow:#DABF63; --yellow2:#F8DE8E; --purple:#9891CE; --purple2:#C8BBF7;
+ --sh:3px 3px 0 #0005; --sh2:4px 4px 0 #0008; --sh3:8px 8px 0 #0008;
+ background:repeating-linear-gradient(0deg,transparent,transparent 33px,#c0dfce0b 34px),
+            repeating-linear-gradient(90deg,transparent,transparent 33px,#c0dfce0b 34px),#101619;
+}
+/* Modos de cor nativos Etapa 3: mantém configuração do usuário. */
+body.briox[data-brio3-color='azul']:not(.dark){--bg:#F5F8FF;--paper:#E1E9FF;--paper2:#CEDAFE;--ink:#202941;--blue2:#2A4BC1;--bdr:#A2B1D2}
+body.briox[data-brio3-color='vermelho']:not(.dark){--bg:#FFF8F4;--paper:#F7E0D9;--paper2:#EFC9BB;--blue2:#A54032;--bdr:#C49C94}
+body.briox[data-brio3-color='amarelo']:not(.dark){--bg:#FFFDF1;--paper:#F7EBC3;--paper2:#F0DEA1;--blue2:#77581C;--bdr:#C1AD71}
+body.briox.dark[data-brio3-color='azul']{--bg:#151D2E;--paper:#222D46;--paper2:#2C3D5B;--ink:#F1F4FF;--bdr:#697FA7;--blue2:#A9C4FF}
+body.briox.dark[data-brio3-color='vermelho']{--bg:#241A1D;--paper:#34272A;--paper2:#443336;--ink:#F9F0E9;--bdr:#88615A;--blue2:#F0B1A0}
+body.briox.dark[data-brio3-color='amarelo']{--bg:#201D16;--paper:#332E22;--paper2:#413927;--ink:#FFF5E0;--bdr:#8F805C;--blue2:#FFE29B}
+body.briox *{scrollbar-color:var(--bdr2) transparent;}
+body.briox h1,body.briox h2,body.briox h3,body.briox h4,body.briox .serif,body.briox .ob-title {font-family:'Arial Black',Impact,'Arial Narrow',sans-serif;letter-spacing:-.065em;line-height:1.13;font-weight:900;}
+body.briox .mono,body.briox .sec-label,body.briox .label,body.briox .wtitle,body.briox .btn,body.briox .nav-btn,body.briox .stat-l,body.briox .tbar-date,body.briox .clock-pill,body.briox .brio3-kicker {font-family:Consolas,'Courier New',monospace;letter-spacing:.01em;}
+body.briox a {color:var(--blue2);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+body.briox :focus-visible {outline:3px solid var(--blue2)!important;outline-offset:3px}
+body.briox .qa:focus-visible,body.briox .folder-head:focus-visible{outline:3px solid var(--blue2)!important;outline-offset:2px}
+body.briox #app{max-width:1020px;background:var(--bg);border-left:2px solid var(--ink);border-right:2px solid var(--ink);box-shadow:12px 0 0 #15251f26,-12px 0 0 #15251f26;}
+body.briox #topbar{background:var(--ink);color:var(--bg);min-height:92px;padding:1.02rem 1.5rem;gap:.85rem;border-bottom:5px solid var(--green);box-shadow:none;position:relative;}
+body.briox #topbar::before{content:'BRIO / SISTEMA COGNITIVO    •    ESTAÇÃO 02';position:absolute;top:.28rem;left:1.5rem;font:600 .58rem Consolas,monospace;letter-spacing:.12em;color:var(--green);}
+body.briox .tbar-logo{color:var(--bg);font:900 2.7rem/.91 'Arial Black',Impact,sans-serif;letter-spacing:-.10em;flex:1;padding-top:1rem;text-transform:uppercase;}
+body.briox .tbar-logo em {color:var(--green);font-style:normal;}
+body.briox .tbar-date{color:#CFD8D2;max-width:165px;text-align:right;white-space:normal;font-size:.66rem;line-height:1.35}
+body.briox .clock-pill{background:transparent;color:var(--green);border:1px solid #9EA89E;padding:.4rem .55rem;font-size:.67rem;border-radius:0}
+body.briox #topbar .btn{background:var(--green);color:#172016;box-shadow:3px 3px 0 var(--red);min-width:42px;min-height:42px;padding:.3rem!important;}
+body.briox #brio-save-status{background:var(--paper);border-bottom:1px solid var(--ink);padding:.55rem 1.3rem;font:600 .68rem Consolas,monospace;letter-spacing:.01em;color:var(--ink2)}
+body.briox #brio-save-status::before{content:'● ';color:var(--green2)}
+body.briox #main{padding-bottom:calc(95px + env(safe-area-inset-bottom));}
+body.briox .pg{padding:1.35rem 1.5rem 3.5rem;}
+body.briox .dash-hero{border:2px solid var(--ink);box-shadow:7px 7px 0 var(--red);border-radius:0;background:var(--paper);padding:3.4rem 1.4rem 1.3rem;min-height:175px;overflow:hidden;position:relative;}
+body.briox .dash-hero::before{content:'[ 01 // INÍCIO ]    ANOTAÇÕES DO DIA';position:absolute;left:1.4rem;top:1.1rem;font:700 .67rem Consolas,monospace;letter-spacing:.085em;color:var(--blue2);}
+body.briox .dash-hero::after{content:'B/';position:absolute;right:-.25rem;bottom:-1.2rem;font:900 9rem/.8 Impact,sans-serif;opacity:.06;color:var(--blue2);}
+body.briox .dash-hero h2{font-family:'Arial Black',Impact,sans-serif;font-size:clamp(1.35rem,4vw,2.2rem)!important;line-height:1.06;letter-spacing:-.055em;max-width:86%;margin:.4rem 0!important;}
+body.briox .dash-hero #dash-daystr{font:600 .68rem Consolas,monospace;color:var(--ink3)}
+body.briox .dash-hero #dash-sub{font-size:.84rem!important;color:var(--ink2);max-width:35rem;}
+body.briox .stats-row{gap:.8rem;margin:1.3rem 0 1rem;}
+body.briox .stat-card{background:var(--bg);border:2px solid var(--ink);border-radius:0;box-shadow:3px 3px 0 var(--blue2);padding:1rem .4rem .7rem;position:relative}
+body.briox .stat-card:nth-child(2){box-shadow:3px 3px 0 var(--green2)}
+body.briox .stat-card:nth-child(3){box-shadow:3px 3px 0 var(--red2)}
+body.briox .stat-card::before{content:'INDEX //';position:absolute;top:.26rem;left:.35rem;font:600 .48rem Consolas,monospace;color:var(--ink3)}
+body.briox .stat-n{font:900 2.1rem/1 Impact,'Arial Black',sans-serif;letter-spacing:-.03em;color:var(--ink)}
+body.briox .stat-l{color:var(--ink2);font-size:.63rem;text-transform:uppercase;letter-spacing:.04em;margin-top:.3rem}
+body.briox .streak-wrap{background:var(--paper);border:1px dashed var(--ink3);border-radius:0;padding:.85rem;box-shadow:none;}
+body.briox .sdot{border:0;border-radius:0;height:7px;background:var(--bdr)}
+body.briox .sdot.done{background:var(--blue2)}body.briox .sdot.today{background:var(--red)}
+body.briox .sec-hdr{margin-top:1.15rem;margin-bottom:.75rem;}
+body.briox .sec-label{color:var(--ink2);font-weight:700;font-size:.7rem;letter-spacing:.08em;}
+body.briox .sec-label::before{content:'▣';color:var(--red2);margin-right:.15rem;}
+body.briox .sec-label::after{height:1px;background:var(--bdr2)}
+body.briox .qa-grid{gap:.75rem;margin-bottom:1.3rem;}
+body.briox .qa{background:var(--bg);border:1.5px solid var(--ink);border-radius:0;box-shadow:4px 4px 0 var(--paper3);min-height:114px;padding:1.1rem 1.05rem;position:relative;}
+body.briox .qa:nth-child(2){box-shadow:4px 4px 0 var(--green2)}body.briox .qa:nth-child(3){box-shadow:4px 4px 0 var(--blue2)}body.briox .qa:nth-child(4){box-shadow:4px 4px 0 var(--red2)}
+body.briox .qa:hover{background:var(--paper);transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+body.briox .qa-i{font-size:1.4rem;filter:grayscale(.55);margin-bottom:.35rem;}
+body.briox .qa-t{font-family:'Arial Black',Arial,sans-serif;font-size:.92rem;letter-spacing:-.04em;text-transform:uppercase;line-height:1.2;margin-bottom:.3rem;}
+body.briox .qa-s{color:var(--ink3);font-size:.74rem;line-height:1.4;}
+body.briox .win,body.briox .folder,body.briox .note-card,body.briox .feed-card,body.briox .brio3-guide,body.briox .brio3-note-tools{border:1.5px solid var(--ink);border-radius:0;background:var(--paper);box-shadow:4px 4px 0 var(--paper3);overflow:hidden}
+body.briox .wbar{border-bottom:1.5px solid var(--ink);background:var(--paper2);padding:.55rem .95rem;}
+body.briox .wd{border:1px solid var(--ink);border-radius:0;width:9px;height:9px;}
+body.briox .wtitle{font-size:.72rem;font-weight:700;letter-spacing:.005em;}
+body.briox .wbody{padding:1.05rem;}
+body.briox .folder-head{padding:.85rem 1rem;}
+body.briox .folder-body{border-top:1px dashed var(--bdr2);}
+body.briox .p-item{background:var(--bg);border:1px solid var(--bdr2);border-radius:0;}
+body.briox .note-title{font:700 1rem 'Arial Black',Arial,sans-serif;letter-spacing:-.045em}
+body.briox .note-card:hover{box-shadow:5px 5px 0 var(--green2)}
+body.briox .feed-card{background:var(--bg)}body.briox .feed-head{border-bottom:1px solid var(--ink)}
+body.briox .feed-body{line-height:1.7}
+body.briox .feed-q{background:var(--paper);border:1px dashed var(--blue2);border-radius:0;}
+body.briox .btn{border:1.5px solid var(--ink);border-radius:0;box-shadow:3px 3px 0 var(--ink);min-height:38px;font-weight:700;letter-spacing:.02em;padding:.48rem .75rem;white-space:normal;}
+body.briox .btn:hover{box-shadow:4px 4px 0 var(--blue2);transform:translate(-1px,-1px);}
+body.briox .btn:active{box-shadow:none;transform:translate(2px,2px)}
+body.briox .btn-b{background:var(--blue2);border-color:var(--ink);color:#fff}
+body.briox .btn-g{background:var(--green);border-color:var(--ink);color:#1c281b}
+body.briox .btn-p{background:var(--purple);border-color:var(--ink);color:#151124}
+body.briox .btn-y{background:var(--yellow);border-color:var(--ink);color:#312510}
+body.briox .btn-r{background:var(--red);border-color:var(--ink);color:#281a17}
+body.briox .inp,body.briox .ta{border:1.5px solid var(--bdr2);border-radius:0;background:var(--bg);padding:.66rem .78rem;line-height:1.5}
+body.briox .inp:focus,body.briox .ta:focus{border-color:var(--blue2);box-shadow:3px 3px 0 color-mix(in srgb,var(--blue2),transparent 80%)}
+body.briox .tag{border-radius:0;border-width:1px;}body.briox .alert{border-radius:0;line-height:1.6;}
+body.briox .nfield,body.briox .brio3-details,body.briox .brio3-phase{border-radius:0;}
+body.briox .nf-head{background:var(--paper2);}
+body.briox .fc-card{border:2px solid var(--ink);border-radius:0;box-shadow:5px 5px 0 var(--green2)}
+body.briox .fc-text{font-family:'Trebuchet MS',sans-serif;font-weight:700;}
+body.briox #grafo-canvas{border:2px solid var(--ink);border-radius:0;background-color:var(--bg);}
+body.briox .gnode{border-radius:0;box-shadow:2px 2px 0 var(--ink);}
+body.briox .grafo-help{background:var(--paper);border:1px dashed var(--blue2);border-radius:0;}
+body.briox .setting-row{border-radius:0;border:1px solid var(--bdr2);}
+body.briox .modal,body.briox .brio3-dialog{background:var(--bg);border:2px solid var(--ink);border-radius:0;box-shadow:8px 8px 0 #0004;}
+body.briox .modal-hdr{background:var(--paper);border-bottom:2px solid var(--ink)}
+body.briox .modal-foot{background:var(--paper);border-top:1px solid var(--ink)}
+body.briox #ob-screen{background:var(--paper);}
+body.briox .ob-title{font-size:3rem;}body.briox .ob-emoji{filter:grayscale(.4)}
+body.briox #brio-boot>div{border-radius:0;box-shadow:6px 6px 0 var(--blue2)}
+/* Short navigation, with a real accessible supplementary menu. */
+body.briox #bottomnav{max-width:1020px;background:var(--ink);border-top:2px solid var(--green);box-shadow:none;z-index:72;}
+body.briox .nav-btn{color:#E4E7DC;border-right:1px solid #ffffff22;border-top:4px solid transparent;min-height:68px;padding:.48rem .15rem .6rem;font-size:.68rem;font-weight:700;gap:.1rem;}
+body.briox .nav-btn .ni{font-size:1.18rem;line-height:1.05;font-family:Consolas,monospace;}
+body.briox .nav-btn.on{background:var(--green);color:#142016;border-top-color:var(--red);}
+body.briox .nav-btn:hover:not(.on){background:#3b4445;color:#fff;}
+body.briox #briox-menu{display:block;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(71px + env(safe-area-inset-bottom));z-index:71;width:min(calc(100vw - 1.2rem),420px);background:var(--paper);border:2px solid var(--ink);box-shadow:7px 7px 0 var(--blue2);padding:.85rem;max-height:70vh;overflow:auto;}
+body.briox #briox-menu[hidden]{display:none!important;}
+body.briox .briox-menu-title{font:700 .7rem Consolas,monospace;letter-spacing:.085em;color:var(--ink3);border-bottom:1px solid var(--bdr2);padding-bottom:.45rem;margin-bottom:.6rem}
+body.briox .briox-menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+body.briox .briox-menu-item{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;min-height:64px;border:1.5px solid var(--ink);padding:.6rem;background:var(--bg);font:700 .76rem Consolas,monospace;color:var(--ink);cursor:pointer;}
+body.briox .briox-menu-item:hover{background:var(--green)}body.briox .briox-menu-item.on{border-left:4px solid var(--blue2)}
+body.briox .briox-menu-caption{font:400 .66rem 'Trebuchet MS',sans-serif;color:var(--ink3)}
+body.briox .brio3-dialog{max-width:700px}
+@media(min-width:780px){
+ body.briox #bottomnav{top:139px;bottom:0;left:calc(50% - 510px);transform:none;width:169px;max-width:none;flex-direction:column;border-top:0;border-right:2px solid var(--ink);border-left:0;align-items:stretch;box-shadow:none;background:var(--ink);}
+ body.briox #bottomnav:before{content:'MENUS / 02';font:700 .62rem Consolas,monospace;letter-spacing:.13em;padding:1rem .6rem;color:var(--green);}
+ body.briox .nav-btn{display:flex;flex-direction:row;flex:none;align-items:center;justify-content:flex-start;gap:.65rem;font-size:.72rem;height:56px;min-height:56px;border-top:0;border-right:0;border-bottom:1px solid #ffffff25;padding:.5rem .85rem;text-align:left;}
+ body.briox .nav-btn.on{border-left:5px solid var(--red);border-top:0;padding-left:calc(.85rem - 5px);}
+ body.briox #main{margin-left:169px;padding-bottom:2rem;}
+ body.briox .pg{padding:1.65rem 2rem 2.5rem;}
+ body.briox .dash-hero{padding:3.7rem 2rem 1.7rem;}
+ body.briox .dash-hero::before{left:2rem;}
+ body.briox .qa-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+ body.briox .qa{padding:.85rem;min-height:145px;}
+ body.briox .qa-t{font-size:.78rem;}
+ body.briox #briox-menu{top:195px;bottom:auto;left:calc(50% - 510px + 184px);transform:none;width:340px;max-height:65vh;}
+}
+@media(min-width:780px) and (max-width:1020px){body.briox #bottomnav{left:0;}body.briox #briox-menu{left:184px;}}
+@media(max-width:779px){
+ body.briox #app{border:0;box-shadow:none;}
+ body.briox #topbar{min-height:83px;padding:.9rem .75rem .55rem;gap:.38rem;}
+ body.briox #topbar::before{left:.75rem;font-size:.5rem;letter-spacing:.02em;}
+ body.briox .tbar-logo{font-size:2.05rem;padding-top:.85rem;min-width:100px;}
+ body.briox .tbar-date{font-size:.56rem;max-width:105px;}
+ body.briox .clock-pill{font-size:.58rem;padding:.25rem;}
+ body.briox .pg{padding:1.15rem 1.0rem 2rem;}
+ body.briox .dash-hero{padding:3.1rem 1.05rem 1.15rem;}
+ body.briox .dash-hero::before{left:1.05rem;font-size:.54rem;}
+ body.briox .dash-hero h2{font-size:1.35rem!important;max-width:95%;}
+ body.briox .stat-n{font-size:1.7rem;}
+ body.briox .nav-btn{font-size:.57rem;min-height:65px;}
+ body.briox .nav-btn .ni{font-size:1.08rem;}
+}
+@media(max-width:380px){body.briox .tbar-date{display:none;}body.briox .nav-btn{font-size:.5rem;}.dash-hero:before{letter-spacing:0;}}
+@media(prefers-reduced-motion:reduce){body.briox *,body.briox *::before,body.briox *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important;}}
+
