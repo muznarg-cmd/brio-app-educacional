@@ -1,0 +1,60 @@
+
+/* Etapa 3: estilos adicionais, sem alterar a folha original. */
+.brio3-guide,.brio3-note-tools{background:var(--paper);border:2px solid var(--bdr);border-radius:var(--r);padding:.8rem;margin-bottom:.85rem;box-shadow:var(--sh);color:var(--ink)}
+.brio3-guide p,.brio3-note-tools p{margin:.4rem 0}
+.brio3-kicker{font:700 .76rem/1.5 'Courier Prime','Courier New',monospace;color:var(--ink2)}
+.brio3-intro{font-size:.9rem;line-height:1.6}
+.brio3-actions{display:flex;align-items:end;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}
+.brio3-actions .btn,.brio3-guide .btn,.brio3-dialog .btn,.brio3-note-tools .btn{white-space:normal;min-height:44px}
+.brio3-mode-control{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem}
+.brio3-mode-control select{width:auto;min-height:44px;font-size:.9rem;max-width:100%}
+.brio3-mode-label{font-size:.8rem;font-weight:bold;color:var(--ink2)}
+.brio3-details,.brio3-phase{margin:.6rem 0;border:1px solid var(--bdr2);border-radius:var(--r);padding:.5rem .65rem;background:var(--bg)}
+.brio3-details summary,.brio3-phase summary{cursor:pointer;font-weight:600;min-height:36px;display:list-item;padding:.35rem .15rem;line-height:1.4}
+.brio3-guide-dl{font-size:.88rem;line-height:1.65}
+.brio3-guide-dl dt{font-weight:700;margin:.7rem 0 .15rem}
+.brio3-guide-dl dd{margin:0;color:var(--ink2)}
+.brio3-help{font-size:.82rem;color:var(--ink2);line-height:1.65}
+.brio3-colors,.brio3-exercise{margin:.7rem 0;border:1px solid var(--bdr2);border-radius:var(--r);padding:.6rem}
+.brio3-colors legend,.brio3-exercise legend{font-weight:bold;padding:0 .3rem}
+.brio3-choice{display:flex;align-items:center;gap:.6rem;min-height:44px;padding:.35rem;cursor:pointer;line-height:1.5}
+.brio3-choice input{flex:0 0 auto;width:18px;height:18px;accent-color:var(--blue2)}
+.brio3-swatch{width:18px;height:18px;border:1px solid var(--ink2);border-radius:50%;flex:0 0 auto}
+.brio3-swatch[data-color="original"]{background:#F5E6D3}.brio3-swatch[data-color="azul"]{background:#DCEAF7}.brio3-swatch[data-color="vermelho"]{background:#F7DEDA}.brio3-swatch[data-color="amarelo"]{background:#FAEDBC}
+.brio3-dialog{width:calc(100% - 1rem);max-width:700px;max-height:90vh;max-height:90dvh;overflow-y:auto;padding:1rem;border:2px solid var(--bdr2);border-radius:var(--r2);background:var(--bg);color:var(--ink);margin:auto;box-shadow:0 8px 36px #0005;line-height:1.65}
+.brio3-dialog::backdrop{background:#2229}
+.brio3-dialog-head{display:flex;align-items:start;justify-content:space-between;gap:.6rem;margin-bottom:.7rem}
+.brio3-dialog-head h2{font-size:1.2rem;line-height:1.4}
+.brio-work-dialog .brio3-dialog-head{flex-wrap:wrap}
+.brio-work-dialog .brio3-dialog-head h2{flex:1 1 13rem;min-width:0;overflow-wrap:anywhere}
+.brio-work-dialog .inp,.brio-work-dialog .ta{max-width:100%}
+.brio-work-dialog section{margin:.7rem 0}
+.brio-work-dialog .btn{margin:.2rem;max-width:100%;overflow-wrap:anywhere}
+#brio-recovery-inspector .brio3-dialog-head{flex-wrap:wrap}
+#brio-recovery-inspector .brio3-dialog-head h2{flex:1 1 13rem;min-width:0;overflow-wrap:anywhere}
+.brio3-dialog .field{margin:.85rem 0}
+.brio3-dialog .ta,.brio3-dialog .inp{font-size:1rem}
+.brio3-dialog h3{font-size:1.1rem}
+.brio3-feedback{margin:.7rem 0;padding:.65rem;border-left:3px solid var(--blue2);background:var(--paper);font-size:.9rem}
+.brio3-feedback:empty{display:none}
+.brio3-preserve{white-space:pre-wrap;overflow-wrap:anywhere}
+.brio3-project-action{margin-top:.4rem;min-height:36px;white-space:normal}
+.brio3-note-tools h3{font-size:1rem;margin-bottom:.4rem}
+.brio3-template{margin-top:.75rem;border-top:1px dashed var(--bdr2);padding-top:.6rem}
+.brio3-cornell-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:.5rem}
+.brio3-cornell-grid .field{min-width:0;margin-bottom:.25rem}
+.brio3-note-tools .ta{min-height:100px}
+.brio3-polya-open{margin-top:.5rem}
+body[data-brio3-color="azul"]{--bg:#F4F8FC;--paper:#DCEAF7;--paper2:#C9DEF0;--paper3:#B9D1E5;--bdr:#91ABC2;--bdr2:#5E7C96;--ink3:#536577;--ink4:#5D6D7C;--blue:#406B88;--blue2:#365A73;--blue3:#254056}
+body[data-brio3-color="vermelho"]{--bg:#FFF6F5;--paper:#F7DEDA;--paper2:#EEC6C1;--paper3:#E3B0A9;--bdr:#C7958D;--bdr2:#97645C;--ink3:#76555A;--ink4:#7D5D62;--blue:#9F453B;--blue2:#82382F;--blue3:#622920}
+body[data-brio3-color="amarelo"]{--bg:#FFFDF2;--paper:#FAEDBC;--paper2:#F2DFA1;--paper3:#E7CD80;--bdr:#BEA254;--bdr2:#8B722B;--ink3:#6F613F;--ink4:#776B48;--blue:#E4BE55;--blue2:#795B12;--blue3:#604500}
+body[data-brio3-color="amarelo"] .btn-b{color:#2c2c2c}
+body.dark[data-brio3-color="azul"]{--bg:#111B25;--paper:#1C2B3A;--paper2:#263B4F;--paper3:#314B63;--bdr:#526D85;--bdr2:#7998B2;--ink3:#BAC8D7;--ink4:#A9B9C9;--blue:#A4C9E4;--blue2:#A4C9E4;--blue3:#CBE6F8}
+body.dark[data-brio3-color="vermelho"]{--bg:#241517;--paper:#382124;--paper2:#4B2C30;--paper3:#5C373A;--bdr:#80585E;--bdr2:#B28188;--ink3:#D8B9BC;--ink4:#CBA9AD;--blue:#E5ACA3;--blue2:#E5ACA3;--blue3:#FFCDC5}
+body.dark[data-brio3-color="amarelo"]{--bg:#201C11;--paper:#302918;--paper2:#423822;--paper3:#55482D;--bdr:#80704A;--bdr2:#AD9969;--ink3:#D3C7A8;--ink4:#C2B592;--blue:#E6C360;--blue2:#E6C360;--blue3:#FFE4A1}
+body.dark[data-brio3-color="azul"] .btn-b{color:#173347}
+body.dark[data-brio3-color="vermelho"] .btn-b{color:#41140F}
+body.dark[data-brio3-color="amarelo"] .btn-b{color:#2C2808}
+@media(min-width:500px){.brio3-cornell-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}#brio3-field-cornell-summary,#brio3-field-cornell-review,#brio3-field-cornell-source{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){.brio3-guide,.brio3-dialog{animation:none!important;transition:none!important}}
+

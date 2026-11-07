@@ -1,0 +1,142 @@
+
+/* BRIO 2.3 — ORBITAL KEYS / modo escuro Googie-Tech
+   Camada adicional. Inserir APÓS o CSS original e o briox-neoretro.
+   Não altera os temas claros e não modifica dados. */
+body.briox.dark,
+body.briox.dark[data-brio3-color] {
+  color-scheme: dark;
+  --bg:#0C121B;
+  --paper:#172230;
+  --paper2:#202D3B;
+  --paper3:#2C3B4B;
+  --green:#9AF0D0;
+  --green2:#76DABC;
+  --green3:#C7FFE8;
+  --blue:#9BB9FF;
+  --blue2:#94B7FF;
+  --blue3:#CDDEFF;
+  --ink:#F0F5F7;
+  --ink2:#D4DEE8;
+  --ink3:#BCCAD6;
+  --ink4:#A7B9C8;
+  --bdr:#586D82;
+  --bdr2:#8598AC;
+  --red:#FF998C;
+  --red2:#FFB4A9;
+  --yellow:#F4CF80;
+  --yellow2:#FFE2A4;
+  --purple:#C1AAFF;
+  --purple2:#D7C7FF;
+  --sh:3px 3px 0 #02071199;
+  --sh2:5px 5px 0 #020711BB;
+  --sh3:8px 8px 0 #020711DD;
+  background-color:#080D14;
+  background-image:
+    radial-gradient(ellipse at 95% -15%, #6F8AFF20,transparent 42%),
+    radial-gradient(ellipse at -20% 70%, #7EE3C910,transparent 38%),
+    linear-gradient(#B4C5E00A 1px,transparent 1px),
+    linear-gradient(90deg,#B4C5E00A 1px,transparent 1px);
+  background-size:auto,auto,40px 40px,40px 40px;
+}
+/* Topbar e navegação NOTURNOS: a regra geral do tema claro usava --ink como fundo. */
+body.briox.dark #topbar {
+  color:#F0F5F7;
+  background:linear-gradient(112deg,#101A28 0%,#17263A 67%,#23334A 100%);
+  border-bottom:4px solid var(--green);
+  box-shadow:inset 0 -1px 0 #A7EBDD33;
+}
+body.briox.dark #topbar::before {color:#D8FFF0;letter-spacing:.09em}
+body.briox.dark .tbar-logo {color:#F5F8FC;text-shadow:2px 2px 0 #375B88}
+body.briox.dark .tbar-logo em {color:var(--green)}
+body.briox.dark .tbar-date {color:#DCE6F4}
+body.briox.dark .clock-pill {color:var(--green);border:1px solid #8B9FB8;background:#101925}
+body.briox.dark #topbar .btn {background:var(--green);color:#10232B;border-color:#C7FFF0;box-shadow:3px 3px 0 var(--red)}
+body.briox.dark #bottomnav {background:#101A28;border-color:var(--green)}
+body.briox.dark #bottomnav::before {color:var(--green)}
+body.briox.dark .nav-btn {color:#DAE6F2;border-color:#52677A}
+body.briox.dark .nav-btn.on {background:#284459;color:#E4FFF4;border-left-color:var(--red);border-top-color:var(--red)}
+body.briox.dark .nav-btn:hover:not(.on) {background:#24374A;color:#FFFFFF}
+/* Superfícies e legibilidade. Bordas mais discretas que as do modo claro. */
+body.briox.dark #app {background:var(--bg);border-color:var(--bdr);box-shadow:12px 0 0 #05081066,-12px 0 0 #05081066}
+body.briox.dark #brio-save-status {background:#101D2B;border-color:var(--bdr);color:var(--ink2)}
+body.briox.dark .dash-hero {
+  position:relative;
+  isolation:isolate;
+  background:radial-gradient(circle at 95% 11%,#36577699 0 2%,transparent 2.3%),
+             radial-gradient(ellipse at 115% 105%,transparent 0 36%,#94B7FF30 36.3% 36.8%,transparent 37.1% 47%,#9AF0D022 47.4% 48%,transparent 48.4%),
+             linear-gradient(126deg,#1A2B3B,#182432 72%,#253A4B);
+  border-color:var(--bdr2);
+  box-shadow:6px 6px 0 #E78F874D;
+}
+body.briox.dark .dash-hero::before {color:var(--green)}
+body.briox.dark .dash-hero::after {color:#C5EAFF;opacity:.08}
+body.briox.dark .stat-card,
+body.briox.dark .qa,
+body.briox.dark .win,
+body.briox.dark .folder,
+body.briox.dark .note-card,
+body.briox.dark .feed-card,
+body.briox.dark .brio3-guide,
+body.briox.dark .brio3-note-tools,
+body.briox.dark .briox-menu-item {border-color:var(--bdr);background:var(--paper);color:var(--ink)}
+body.briox.dark .stat-card {box-shadow:3px 3px 0 #7EC8D166}
+body.briox.dark .stat-card:nth-child(2) {box-shadow:3px 3px 0 #78CEAF66}
+body.briox.dark .stat-card:nth-child(3) {box-shadow:3px 3px 0 #EC988A66}
+body.briox.dark .qa {box-shadow:3px 3px 0 #5679B455}
+body.briox.dark .qa:nth-child(2) {box-shadow:3px 3px 0 #76DABC55}
+body.briox.dark .qa:nth-child(3) {box-shadow:3px 3px 0 #94B7FF55}
+body.briox.dark .qa:nth-child(4) {box-shadow:3px 3px 0 #FF998C55}
+body.briox.dark .qa:hover {background:var(--paper2);box-shadow:4px 4px 0 var(--blue)}
+body.briox.dark .qa-s,
+body.briox.dark .note-meta,
+body.briox.dark .note-preview,
+body.briox.dark .feed-time {color:var(--ink3)}
+body.briox.dark .wbar,
+body.briox.dark .modal-hdr,
+body.briox.dark .modal-foot {background:var(--paper2);border-color:var(--bdr)}
+body.briox.dark .win,
+body.briox.dark .folder,
+body.briox.dark .note-card,
+body.briox.dark .feed-card,
+body.briox.dark .brio3-guide,
+body.briox.dark .brio3-note-tools {box-shadow:3px 3px 0 #344A6070}
+body.briox.dark .p-item,
+body.briox.dark .nfield,
+body.briox.dark .brio3-phase,
+body.briox.dark .brio3-details,
+body.briox.dark .brio3-dialog,
+body.briox.dark .modal,
+body.briox.dark .fc-card,
+body.briox.dark .setting-row,
+body.briox.dark .briox-menu {background:var(--paper);color:var(--ink);border-color:var(--bdr)}
+body.briox.dark .fc-card {box-shadow:4px 4px 0 #7FCFB655}
+body.briox.dark .fc-back {background:linear-gradient(130deg,#243D46,#253454)}
+body.briox.dark .gnode {background:#213549;color:#F0F5F7;border-color:var(--bdr2);box-shadow:2px 2px 0 #050A10}
+body.briox.dark #grafo-canvas {background-color:#101A28;border-color:var(--bdr2)}
+body.briox.dark .inp,
+body.briox.dark .ta,
+body.briox.dark select.inp,
+body.briox.dark input:not([type="checkbox"]):not([type="radio"]) {background:#101B29;color:#F0F5F7;border-color:var(--bdr2)}
+body.briox.dark input::placeholder,
+body.briox.dark textarea::placeholder {color:#A9BACB;opacity:1}
+body.briox.dark .btn {background:#24374B;border-color:#8DA4B9;color:#F5F8FC;box-shadow:2px 2px 0 #02071177}
+body.briox.dark .btn-b {background:#94B7FF;color:#101A28;border-color:#C6D9FF}
+body.briox.dark .btn-g {background:#9AF0D0;color:#112B29;border-color:#C9FFEA}
+body.briox.dark .btn-p {background:#C1AAFF;color:#251C40;border-color:#E7DBFF}
+body.briox.dark .btn-y {background:#F4CF80;color:#332508;border-color:#FFE4AA}
+body.briox.dark .btn-r {background:#FF998C;color:#361916;border-color:#FFC8C0}
+body.briox.dark .btn:hover {filter:brightness(1.06)}
+body.briox.dark .sec-label,
+body.briox.dark .wtitle,
+body.briox.dark .brio3-kicker {color:#DCE7F2}
+body.briox.dark :focus-visible {outline:3px solid var(--green)!important;outline-offset:3px}
+body.briox.dark ::selection {background:#94B7FF;color:#091522}
+body.briox.dark a {color:#B8CDFF}
+body.briox.dark #briox-menu {box-shadow:6px 6px 0 #0A1019}
+body.briox.dark .briox-menu-item:hover {background:var(--paper2)}
+body.briox.dark #ob-screen,
+body.briox.dark #brio-boot {background:#101925}
+@media (prefers-reduced-motion: reduce) {
+ body.briox.dark *, body.briox.dark *::before, body.briox.dark *::after {animation:none!important;transition:none!important}
+}
+

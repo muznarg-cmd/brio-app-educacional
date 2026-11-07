@@ -1,78 +1,60 @@
-# BRIO — Aplicação Educacional 📚💻
+# BRIO 3.0 · ORBITAL KEYS · RC1
 
-Aplicação EdTech em desenvolvimento para auxiliar professores no planejamento, na organização e no acompanhamento da rotina docente.
+Preparação posterior do Feed Online: versão de revisão `3.0.0-rc1-feed1`, sem publicação em produção. Consulte [regras exatas, testes e plano de ativação/reversão](docs/FEED-CONTROLADO.md). O pacote de revisão usa `BRIO-Feed-Controlado-v1.git.bundle`; o APK `Somente-Emulador` é separado e fixado no projeto demo. A tag RC1 e seus relatórios abaixo permanecem como referência histórica.
 
-## Sobre o projeto
+Sistema pessoal de aprendizagem e gestão do conhecimento. Preserva PKM/PARA, Pólya, Feynman, Cornell, Peirce/grafo, EPVT, vieses, flashcards, Pomodoro, notas, feed, perfil/XP e a proposta OCMT. Percursos, diário, laboratório de notícias manual e perguntas socráticas integram os métodos. Sem IA generativa ou API paga.
 
-O **BRIO** nasceu como uma proposta de ferramenta digital voltada às necessidades reais de professores.
+**Candidata a homologação, sem publicação.** O modo local funciona offline. O Firebase de produção não foi alterado; as regras recebidas estão vencidas. A proposta e o cliente foram testados somente em emuladores demo. Os relatórios anteriores são históricos; consulte [a homologação atual](docs/HOMOLOGACAO-RC1.md).
 
-A aplicação busca reunir, em um mesmo ambiente, recursos para organização de turmas, planejamento de aulas, acompanhamento pedagógico e registro da prática docente.
+## Começar no computador
 
-## Capturas de tela
+1. Extraia todo o ZIP. Mantenha `index.html` junto de `assets`.
+2. Para experimentar sem ferramentas, abra `index.html` no Edge/Chrome atualizado e use sempre o mesmo caminho e perfil. Para uso frequente, prefira o servidor abaixo.
+3. Com Node.js instalado, abra um terminal **nesta pasta** e execute `node scripts/serve.cjs` (ou `npm start`). Abra **http://127.0.0.1:4173**. Ctrl+C encerra o servidor, que atende somente o computador local.
+4. Não é necessário instalar dependências para usar a web. Complete a apresentação e abra **Percursos → Novo percurso**. Em Perfil ficam tema, cores, volume, backup e recuperação.
 
-<p align="center">
-  <img src="imagens/tela-inicial-brio.png" alt="Tela inicial do BRIO" width="230">
-  <img src="imagens/nota-profunda-brio.png" alt="Área de notas profundas do BRIO" width="230">
-</p>
+O navegador guarda dados por origem e perfil. `file://`, `localhost`, `127.0.0.1`, outras portas, navegadores e APK têm armazenamentos distintos. Uma tela vazia em outra origem não prova perda na origem anterior. Não há transferência automática.
 
-<p align="center">
-  <img src="imagens/grapho.png" alt="Área de grafos do BRIO" width="230">
-  <img src="imagens/perfil-brio.png" alt="Tela de perfil do BRIO" width="230">
-</p>
+## Atualizar e guardar seus dados
 
-## Objetivo
+Exporte o backup e a recuperação **na versão/origem que contém seus dados**, e guarde duas cópias externas. Experimente esta versão em outro perfil, importe uma cópia e confira notas, campos e arquivos. Mesclar conserva versões diferentes e remapeia referências conhecidas; conflitos de campos permanecem em relatório exportável.
 
-Desenvolver uma ferramenta acessível, organizada e intuitiva que ajude professores a administrar informações escolares e refletir sobre sua prática pedagógica.
+Só depois atualize sua pasta de uso, conservando caminho, porta e perfil. O schema 8 arquiva estados anteriores antes da normalização. Reverter código não reverte dados; leitores antigos podem recusar o schema novo. Restaurar estado ativo exige confirmação e mantém uma cópia anterior. Não houve restauração sobre dados reais durante o desenvolvimento.
 
-## Funcionalidades planejadas e em desenvolvimento
+O botão de exportação gera JSON sem arquivos e **`.brio`** quando precisa incluir bytes. O pacote contém registros e **todo o cofre**, inclusive arquivos preservados de versões/rascunhos. SHA-256 detecta corrupção; não cifra nem comprova autoria. Backups contêm informações privadas.
 
-- Cadastro de turmas e estudantes
-- Planejamento de aulas
-- Organização de objetivos pedagógicos
-- Registro de presença e avaliações
-- Observações individuais dos estudantes
-- Diário e reflexão docente
-- Organização da rotina
-- Temporizador Pomodoro
-- Registro do humor do dia
-- Recursos de acessibilidade e inclusão
-- Apoio à elaboração de atividades
-- Integração futura com a BNCC
-- Salvamento das informações da aplicação
+Limites: 16 MiB por arquivo; 128 MiB no cofre; 64 MiB de JSON/metadados; 224 MiB por pacote. Base64 antigo permanece preservado. Arquivos novos ficam no IndexedDB, fora do JSON principal. Não limpe dados do navegador sem testar um backup externo.
 
-## Tecnologias utilizadas
+Perfil oferece Arquivos locais, Envios preservados, Lixeira de notas, Registros preservados e Cópias anteriores. Veja o [manual e guia de recuperação](docs/MANUAL-RC1.md).
 
-### Aplicativo Android
+## Android de teste
 
-- Kotlin
-- Android Studio
-- Gradle
-- XML ou Jetpack Compose — a confirmar
+O APK separado é **BRIO Teste**, pacote `brio.cognitive.pkm.localtest`, com assinatura debug. A autorização atual cobre apenas emulador isolado. Não houve instalação em aparelho pessoal, migração de dados reais ou publicação em loja.
 
-### Protótipo para navegador
+Para compilar, instale as dependências fixadas de `native/` com `pnpm install --frozen-lockfile --ignore-scripts`, tenha Java 21 e Android SDK e execute `scripts/build-android.ps1` informando `-JavaDirectory` e `-AndroidSdk`. O script sincroniza HTML/assets e mantém cache/chave debug fora da entrega. [Instruções e limites](docs/MANUAL-RC1.md).
 
-- HTML
-- CSS
-- JavaScript
+## Testes para desenvolvimento
 
-## Estrutura planejada
+Instale ferramentas gratuitas com `pnpm install --frozen-lockfile --ignore-scripts` (Node 24 usado na validação). Execute `npm test`. Para navegador, prepare Chromium via Playwright ou defina `BRIO_BROWSER_PATH` para Edge/Chrome existente. Execute sequencialmente:
 
-```text
-brio-app-educacional/
-├── index.html
-├── css/
-│   └── style.css
-├── javascript/
-│   └── script.js
-├── imagens/
-└── README.md
+```powershell
+npm run test:browser
+npm run test:recovery-browser
+npm run test:learning-browser
+npm run test:preferences-security
+npm run test:release-browser
+npm run test:accessibility
+```
 
-Professores, estudantes de licenciatura e profissionais da educação que procuram uma ferramenta de apoio à organização pedagógica.
+São perfis descartáveis, com serviços externos bloqueados. Para Firebase, instale também as dependências de `security/emulator`, tenha Java 21 e execute `scripts/test-firebase.ps1 -JavaDirectory 'CAMINHO_DO_JDK_21' -Browser`. O script usa somente `demo-brio-security`, em loopback. **Não execute deploy.**
 
-🚧 Protótipo em desenvolvimento.
+## Documentação e histórico
 
-O projeto ainda está sendo construído e poderá receber alterações em sua estrutura, aparência e funcionalidades.
+- [Homologação, testes e pendências](docs/HOMOLOGACAO-RC1.md)
+- [Manual, instalação, atualização e recuperação](docs/MANUAL-RC1.md)
+- [Arquitetura e schema 8](docs/ARCHITECTURE.md)
+- [Segurança Firebase e proposta para revisão](docs/FIREBASE-SECURITY-REVIEW.md)
+- [Plano pedagógico anterior à implementação](docs/PLANO-INTEGRACAO-PEDAGOGICA.md)
+- [Plano mestre](docs/ROADMAP.md) e [alterações](CHANGELOG.md)
 
-Autora
-
-Desenvolvido por Camila Espíndola, estudante de Licenciatura em Linguagens e desenvolvedora em formação.
+Originais e referências foram mantidos. `node scripts/verify-originals.cjs` confere hashes. Há checkpoints Git e um bundle externo: `git clone BRIO-3.0-RC1.git.bundle brio-historico` recupera o histórico em outra pasta. Evite reset destrutivo sobre sua cópia de uso.
