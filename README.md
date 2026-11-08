@@ -6,6 +6,39 @@ Sistema pessoal de aprendizagem e gestão do conhecimento. Preserva PKM/PARA, P�
 
 **Candidata a homologação, sem publicação.** O modo local funciona offline. O Firebase de produção não foi alterado; as regras recebidas estão vencidas. A proposta e o cliente foram testados somente em emuladores demo. Os relatórios anteriores são históricos; consulte [a homologação atual](docs/HOMOLOGACAO-RC1.md).
 
+## 📚 Fundamentação científica e publicação acadêmica
+
+### Arquiteturas Cognitivas Distribuídas na Educação
+
+**Artigo publicado nos Anais do IV Congresso Internacional de Educação SESI-SP (2026).**
+
+**Título:** Arquiteturas Cognitivas Distribuídas na Educação: Proposta de Gestão Cognitiva Otimizada com Tecnologias (OCMT) para a Autonomia Intelectual na Era Algorítmica.
+
+**Autoria:** Camila Souza Rodrigues de Almeida  
+**Evento:** IV Congresso Internacional de Educação SESI-SP  
+**Publicação:** Anais do IV Congresso Internacional de Educação SESI-SP: Educação que transforma  
+**Ano:** 2026  
+**Páginas:** 249–261  
+**ISSN:** 3086-8580
+
+### Relação entre a OCMT e o BRIO
+
+A Gestão Cognitiva Otimizada com Tecnologias (OCMT) propõe uma arquitetura de mediação cognitiva voltada à organização do conhecimento, à verificação de informações e ao desenvolvimento da autonomia intelectual.
+
+O BRIO é apresentado no artigo como uma materialização tecnológica dessa proposta, articulando:
+
+- Gestão pessoal do conhecimento (PKM) e método PARA;
+- Estratégias Procedimentais de Verificação com Tecnologias (EPVT);
+- Externalização do pensamento e grafos lógicos;
+- Metacognição e revisão crítica;
+- Organização da atenção e redução da sobrecarga informacional.
+
+A publicação apresenta os fundamentos e as possibilidades pedagógicas da OCMT. O desenvolvimento e a validação empírica do BRIO permanecem processos distintos e contínuos.
+
+**📖 [Consultar publicação acadêmica oficial](https://anais.eventox.com.br/sesi/congresso-de-internacional-de-educacao-sesi-sp/arquiteturas-cognitivas-distribuidas-na-educacao-proposta-de-gestao-cognitiva-otimizada-com-tecnologias-ocmt-para-a-autonomia-intelectual-na)**
+
+---
+
 ## Começar no computador
 
 1. Extraia todo o ZIP. Mantenha `index.html` junto de `assets`.
